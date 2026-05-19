@@ -1,11 +1,12 @@
 export interface Flight {
   id: string;
-  route_code: string;
+  flight_no: string;
   origin: string;
   destination: string;
-  departure_time: string;
-  arrival_time: string;
-  duration_minutes: number;
+  departs_at: string;
+  arrives_at: string;
+  aircraft_type?: string;
+  status: 'scheduled' | 'delayed' | 'cancelled' | 'completed';
   base_price: number;
   created_at: string;
   updated_at: string;
@@ -15,22 +16,23 @@ export interface Seat {
   id: string;
   flight_id: string;
   seat_number: string;
-  cabin_class: 'first' | 'business' | 'economy';
-  is_occupied: boolean;
-  price_multiplier: number;
+  class: 'first' | 'business' | 'economy';
+  is_available: boolean;
+  extra_fee: number;
   created_at: string;
   updated_at: string;
 }
 
 export interface Booking {
   id: string;
-  pnr: string;
+  user_id: string;
   flight_id: string;
   seat_id: string;
-  user_id: string;
   status: 'confirmed' | 'cancelled' | 'rescheduled';
-  total_price: number;
   booked_at: string;
+  total_price: number;
+  pnr_code: string;
+  created_at: string;
   updated_at: string;
   flight?: Flight;
   seat?: Seat;
@@ -40,12 +42,10 @@ export interface Booking {
 export interface Passenger {
   id: string;
   booking_id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone?: string;
-  passport_number?: string;
-  date_of_birth?: string;
+  full_name: string;
+  passport_no: string;
+  nationality: string;
+  dob: string;
   created_at: string;
   updated_at: string;
 }
@@ -54,22 +54,28 @@ export interface Reschedule {
   id: string;
   booking_id: string;
   old_flight_id: string;
-  old_seat_id: string;
   new_flight_id: string;
-  new_seat_id: string;
-  fee_difference: number;
-  rescheduled_at: string;
-  rescheduled_by: string;
+  requested_at: string;
+  fee_charged: number;
+  created_at: string;
 }
 
 export interface SearchQuery {
-  origin?: string;
-  destination?: string;
-  departure_date?: string;
-  passengers?: number;
+  origin: string;
+  destination: string;
+  date: string;
+  passengers: number;
 }
 
 export interface SelectedFlight {
   flight: Flight;
+  seat: Seat;
   cabinClass: 'first' | 'business' | 'economy';
+}
+
+export interface PassengerFormData {
+  fullName: string;
+  passportNo: string;
+  nationality: string;
+  dob: string;
 }

@@ -68,7 +68,7 @@ export default function BookingDetailsClient({ booking, onCancel }: BookingDetai
               <Plane className="w-5 h-5 text-gray-500" />
               <div>
                 <p className="text-sm text-gray-500">Flight</p>
-                <p className="font-medium text-gray-900">{booking.flight?.route_code}</p>
+                <p className="font-medium text-gray-900">{booking.flight?.flight_no}</p>
               </div>
             </div>
 
@@ -87,7 +87,7 @@ export default function BookingDetailsClient({ booking, onCancel }: BookingDetai
               <div>
                 <p className="text-sm text-gray-500">Date</p>
                 <p className="font-medium text-gray-900">
-                  {format(new Date(booking.flight?.departure_time || ''), 'EEEE, MMMM d, yyyy')}
+                  {format(new Date(booking.flight?.departs_at || ''), 'EEEE, MMMM d, yyyy')}
                 </p>
               </div>
             </div>
@@ -97,8 +97,8 @@ export default function BookingDetailsClient({ booking, onCancel }: BookingDetai
               <div>
                 <p className="text-sm text-gray-500">Time</p>
                 <p className="font-medium text-gray-900">
-                  {format(new Date(booking.flight?.departure_time || ''), 'HH:mm')} - {' '}
-                  {format(new Date(booking.flight?.arrival_time || ''), 'HH:mm')}
+                  {format(new Date(booking.flight?.departs_at || ''), 'HH:mm')} - {' '}
+                  {format(new Date(booking.flight?.arrives_at || ''), 'HH:mm')}
                 </p>
               </div>
             </div>
@@ -110,7 +110,7 @@ export default function BookingDetailsClient({ booking, onCancel }: BookingDetai
               <div>
                 <p className="text-sm text-gray-500">Seat</p>
                 <p className="font-medium text-gray-900">
-                  {booking.seat?.seat_number} ({booking.seat?.cabin_class} Class)
+                  {booking.seat?.seat_number} ({booking.seat?.class} Class)
                 </p>
               </div>
             </div>
@@ -127,19 +127,21 @@ export default function BookingDetailsClient({ booking, onCancel }: BookingDetai
             <div>
               <p className="text-sm text-gray-500">Name</p>
               <p className="font-medium text-gray-900">
-                {booking.passenger?.first_name} {booking.passenger?.last_name}
+                {booking.passenger?.full_name}
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Email</p>
-              <p className="font-medium text-gray-900">{booking.passenger?.email}</p>
+              <p className="text-sm text-gray-500">Passport Number</p>
+              <p className="font-medium text-gray-900">{booking.passenger?.passport_no}</p>
             </div>
-            {booking.passenger?.phone && (
-              <div>
-                <p className="text-sm text-gray-500">Phone</p>
-                <p className="font-medium text-gray-900">{booking.passenger.phone}</p>
-              </div>
-            )}
+            <div>
+              <p className="text-sm text-gray-500">Nationality</p>
+              <p className="font-medium text-gray-900">{booking.passenger?.nationality}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Date of Birth</p>
+              <p className="font-medium text-gray-900">{booking.passenger?.dob}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -153,11 +155,11 @@ export default function BookingDetailsClient({ booking, onCancel }: BookingDetai
               <span className="text-gray-600">Base Price</span>
               <span className="font-medium">${booking.flight?.base_price.toFixed(2)}</span>
             </div>
-            {booking.seat?.price_multiplier && booking.seat.price_multiplier > 1 && (
+            {booking.seat?.extra_fee && booking.seat.extra_fee > 0 && (
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Seat Premium (x{booking.seat.price_multiplier})</span>
+                <span className="text-gray-500">Seat Extra Fee</span>
                 <span className="text-gray-700">
-                  +${((booking.flight!.base_price * booking.seat.price_multiplier) - booking.flight!.base_price).toFixed(2)}
+                  +${booking.seat.extra_fee.toFixed(2)}
                 </span>
               </div>
             )}
@@ -199,7 +201,7 @@ export default function BookingDetailsClient({ booking, onCancel }: BookingDetai
         isOpen={isCancelDialogOpen}
         onClose={() => setIsCancelDialogOpen(false)}
         onConfirm={handleCancel}
-        departureTime={booking.flight?.departure_time || ''}
+        departureTime={booking.flight?.departs_at || ''}
       />
     </div>
   );

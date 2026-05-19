@@ -27,7 +27,7 @@ export default function ConfirmationCard({ booking, flight, seat }: Confirmation
       <div className="bg-blue-50 rounded-lg p-6 mb-6">
         <div className="text-center mb-4">
           <p className="text-sm text-gray-600">PNR (Booking Reference)</p>
-          <p className="text-3xl font-bold text-blue-600">{booking.pnr}</p>
+          <p className="text-3xl font-bold text-blue-600">{booking.pnr_code}</p>
         </div>
       </div>
 
@@ -36,7 +36,7 @@ export default function ConfirmationCard({ booking, flight, seat }: Confirmation
           <Plane className="w-5 h-5 text-gray-500" />
           <div>
             <p className="text-sm text-gray-500">Flight</p>
-            <p className="font-medium text-gray-900">{flight.route_code}</p>
+            <p className="font-medium text-gray-900">{flight.flight_no}</p>
           </div>
         </div>
 
@@ -55,7 +55,7 @@ export default function ConfirmationCard({ booking, flight, seat }: Confirmation
           <div>
             <p className="text-sm text-gray-500">Date</p>
             <p className="font-medium text-gray-900">
-              {format(new Date(flight.departure_time), 'EEEE, MMMM d, yyyy')}
+              {format(new Date(flight.departs_at), 'EEEE, MMMM d, yyyy')}
             </p>
           </div>
         </div>
@@ -65,7 +65,7 @@ export default function ConfirmationCard({ booking, flight, seat }: Confirmation
           <div>
             <p className="text-sm text-gray-500">Time</p>
             <p className="font-medium text-gray-900">
-              {format(new Date(flight.departure_time), 'HH:mm')} - {format(new Date(flight.arrival_time), 'HH:mm')}
+              {format(new Date(flight.departs_at), 'HH:mm')} - {format(new Date(flight.arrives_at), 'HH:mm')}
             </p>
           </div>
         </div>
@@ -77,7 +77,7 @@ export default function ConfirmationCard({ booking, flight, seat }: Confirmation
           <div>
             <p className="text-sm text-gray-500">Seat</p>
             <p className="font-medium text-gray-900">
-              {seat.seat_number} ({seat.cabin_class} Class)
+              {seat.seat_number} ({seat.class} Class)
             </p>
           </div>
         </div>

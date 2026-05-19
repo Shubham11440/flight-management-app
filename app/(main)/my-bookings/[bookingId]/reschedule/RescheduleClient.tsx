@@ -40,7 +40,7 @@ export default function RescheduleClient({ booking, onReschedule }: RescheduleCl
             <Plane className="w-5 h-5 text-gray-500" />
             <div>
               <p className="text-sm text-gray-500">Flight</p>
-              <p className="font-medium text-gray-900">{booking.flight?.route_code}</p>
+              <p className="font-medium text-gray-900">{booking.flight?.flight_no}</p>
             </div>
           </div>
 
@@ -59,7 +59,7 @@ export default function RescheduleClient({ booking, onReschedule }: RescheduleCl
             <div>
               <p className="text-sm text-gray-500">Date & Time</p>
               <p className="font-medium text-gray-900">
-                {format(new Date(booking.flight?.departure_time || ''), 'EEEE, MMMM d, yyyy HH:mm')}
+                {format(new Date(booking.flight?.departs_at || ''), 'EEEE, MMMM d, yyyy HH:mm')}
               </p>
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function RescheduleClient({ booking, onReschedule }: RescheduleCl
             <div>
               <p className="text-sm text-gray-500">Seat</p>
               <p className="font-medium text-gray-900">
-                {booking.seat?.seat_number} ({booking.seat?.cabin_class} Class)
+                {booking.seat?.seat_number} ({booking.seat?.class} Class)
               </p>
             </div>
           </div>

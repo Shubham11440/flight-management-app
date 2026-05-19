@@ -20,14 +20,14 @@ export default function SeatCell({
   basePrice,
   selectedCabinClass,
 }: SeatCellProps) {
-  const seatPrice = basePrice * seat.price_multiplier;
-  const extraFee = seatPrice - basePrice;
+  const seatPrice = basePrice + seat.extra_fee;
+  const extraFee = seat.extra_fee;
 
   const getSeatColor = () => {
     if (isOccupied) return 'bg-gray-300 cursor-not-allowed';
     if (isSelected) return 'bg-blue-500 text-white hover:bg-blue-600';
     
-    switch (seat.cabin_class) {
+    switch (seat.class) {
       case 'first':
         return 'bg-purple-100 hover:bg-purple-200 border-purple-300';
       case 'business':
@@ -53,7 +53,7 @@ export default function SeatCell({
           ? `Seat ${seat.seat_number} is occupied`
           : isSelected
           ? `Seat ${seat.seat_number} selected`
-          : `${seat.cabin_class} class - $${seatPrice.toFixed(2)}${extraFee > 0 ? ` (+$${extraFee.toFixed(2)})` : ''}`
+          : `${seat.class} class - $${seatPrice.toFixed(2)}${extraFee > 0 ? ` (+$${extraFee.toFixed(2)})` : ''}`
       }
     >
       {isOccupied ? (

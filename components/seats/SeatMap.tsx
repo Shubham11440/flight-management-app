@@ -73,9 +73,9 @@ export default function SeatMap({
   };
 
   // Group seats by cabin class
-  const firstClassSeats = seats.filter((s) => s.cabin_class === 'first');
-  const businessSeats = seats.filter((s) => s.cabin_class === 'business');
-  const economySeats = seats.filter((s) => s.cabin_class === 'economy');
+  const firstClassSeats = seats.filter((s) => s.class === 'first');
+  const businessSeats = seats.filter((s) => s.class === 'business');
+  const economySeats = seats.filter((s) => s.class === 'economy');
 
   return (
     <div className="space-y-6">
@@ -92,7 +92,7 @@ export default function SeatMap({
         seats={firstClassSeats}
         selectedSeat={selectedSeat}
         onSelect={handleSeatSelect}
-        basePrice={basePrice * 3}
+        basePrice={basePrice + 900}
         selectedCabinClass={selectedCabinClass}
         color="bg-purple-100"
       />
@@ -102,7 +102,7 @@ export default function SeatMap({
         seats={businessSeats}
         selectedSeat={selectedSeat}
         onSelect={handleSeatSelect}
-        basePrice={basePrice * 2}
+        basePrice={basePrice + 450}
         selectedCabinClass={selectedCabinClass}
         color="bg-blue-100"
       />

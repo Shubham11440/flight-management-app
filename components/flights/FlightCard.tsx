@@ -9,10 +9,14 @@ interface FlightCardProps {
 
 export default function FlightCard({ flight, onSelect }: FlightCardProps) {
   const cabinOptions = [
-    { class: 'first' as const, label: 'First Class', multiplier: 3 },
-    { class: 'business' as const, label: 'Business', multiplier: 2 },
-    { class: 'economy' as const, label: 'Economy', multiplier: 1 },
+    { class: 'first' as const, label: 'First Class', extraFee: 900 },
+    { class: 'business' as const, label: 'Business', extraFee: 450 },
+    { class: 'economy' as const, label: 'Economy', extraFee: 0 },
   ];
+
+  const duration = Math.round(
+    (new Date(flight.arrives_at).getTime() - new Date(flight.departs_at).getTime()) / 60000
+  );
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
@@ -20,13 +24,13 @@ export default function FlightCard({ flight, onSelect }: FlightCardProps) {
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <MapPin className="w-4 h-4 text-gray-500" />
-            <span className="text-sm text-gray-600">{flight.route_code}</span>
+            <span className="text-sm text-gray-600">{flight.flight_no}</span>
           </div>
           
           <div className="flex items-center gap-4 mb-3">
             <div className="text-center">
               <p className="text-2xl font-bold text-gray-900">
-                {format(new Date(flight.departure_time), 'HH:mm')}
+                {format(new Date(flight.departs_at), 'HH:mm')}
               </p>
               <p className="text-sm text-gray-600">{flight.origin}</p>
             </div>
@@ -34,21 +38,21 @@ export default function FlightCard({ flight, onSelect }: FlightCardProps) {
             <div className="flex-1 flex items-center justify-center">
               <div className="flex items-center gap-2 text-gray-500">
                 <Clock className="w-4 h-4" />
-                <span className="text-sm">{flight.duration_minutes}m</span>
+                <span className="text-sm">{duration}m</span>
               </div>
               <div className="flex-1 border-t-2 border-dashed border-gray-300 mx-2" />
             </div>
             
             <div className="text-center">
               <p className="text-2xl font-bold text-gray-900">
-                {format(new Date(flight.arrival_time), 'HH:mm')}
+                {format(new Date(flight.arrives_at), 'HH:mm')}
               </p>
               <p className="text-sm text-gray-600">{flight.destination}</p>
             </div>
           </div>
           
           <p className="text-xs text-gray-500">
-            {format(new Date(flight.departure_time), 'EEEE, MMMM d, yyyy')}
+            {format(new Date(flight.departs_at), 'EEEE, MMMM d, yyyy')}
           </p>
         </div>
 
@@ -64,7 +68,7 @@ export default function FlightCard({ flight, onSelect }: FlightCardProps) {
                 <div className="flex items-center gap-1">
                   <DollarSign className="w-4 h-4 text-green-600" />
                   <span className="font-semibold text-green-600">
-                    ${(flight.base_price * option.multiplier).toFixed(2)}
+                    ${(flight.base_price + option.extraFee).toFixed(2)}
                   </span>
                 </div>
               </div>

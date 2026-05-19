@@ -23,7 +23,7 @@ export async function rescheduleBooking(formData: FormData) {
       p_user_id: user.id,
       p_new_flight_id: newFlightId,
       p_new_seat_id: newSeatId,
-      p_rescheduled_by: user.id,
+      p_fee_charged: 0, // Calculate fee based on price difference
     });
 
     if (error) {

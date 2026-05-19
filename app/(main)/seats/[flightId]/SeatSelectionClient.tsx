@@ -28,7 +28,7 @@ export default function SeatSelectionClient({ flight, seats }: SeatSelectionClie
 
   const selectedCabinClass = selectedFlight?.cabinClass || 'economy';
   const basePrice = flight.base_price;
-  const seatPrice = selectedSeat ? basePrice * selectedSeat.price_multiplier : 0;
+  const seatPrice = selectedSeat ? basePrice + selectedSeat.extra_fee : 0;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -50,7 +50,7 @@ export default function SeatSelectionClient({ flight, seats }: SeatSelectionClie
           <div className="space-y-3 mb-6">
             <div>
               <p className="text-sm text-gray-500">Flight</p>
-              <p className="font-medium text-gray-900">{flight.route_code}</p>
+              <p className="font-medium text-gray-900">{flight.flight_no}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Class</p>
@@ -69,7 +69,7 @@ export default function SeatSelectionClient({ flight, seats }: SeatSelectionClie
             {selectedSeat ? (
               <div className="text-gray-900">
                 <p className="font-medium">{selectedSeat.seat_number}</p>
-                <p className="text-sm text-gray-600 capitalize">{selectedSeat.cabin_class} Class</p>
+                <p className="text-sm text-gray-600 capitalize">{selectedSeat.class} Class</p>
                 <p className="text-lg font-bold text-green-600">${seatPrice.toFixed(2)}</p>
               </div>
             ) : (

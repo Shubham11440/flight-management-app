@@ -1,38 +1,18 @@
--- Seed data for flights, seats, and test user
+INSERT INTO flights (flight_no, origin, destination, departs_at, arrives_at, aircraft_type, status, base_price) VALUES
+('AI201', 'Delhi (DEL)', 'Pune (PNQ)', NOW() + INTERVAL '1 day', NOW() + INTERVAL '1 day 2 hours 15 minutes', 'Airbus A320', 'scheduled', 5200.00),
+('AI202', 'Delhi (DEL)', 'Pune (PNQ)', NOW() + INTERVAL '2 days', NOW() + INTERVAL '2 days 2 hours 15 minutes', 'Airbus A320', 'scheduled', 5200.00),
 
--- Note: This seed file assumes auth.users already exists with a test user
--- You'll need to create a test user in Supabase Auth first and replace TEST_USER_UUID below
+('AI301', 'Delhi (DEL)', 'Mumbai (BOM)', NOW() + INTERVAL '1 day 3 hours', NOW() + INTERVAL '1 day 5 hours 10 minutes', 'Airbus A320', 'scheduled', 4800.00),
+('AI302', 'Delhi (DEL)', 'Mumbai (BOM)', NOW() + INTERVAL '3 days', NOW() + INTERVAL '3 days 2 hours 10 minutes', 'Airbus A320', 'scheduled', 4800.00),
 
--- Insert test flights (8 flights across 4 routes)
--- Route 1: NYC to London
-INSERT INTO flights (route_code, origin, destination, departure_time, arrival_time, duration_minutes, base_price) VALUES
-('NYC-LON-001', 'New York (JFK)', 'London (LHR)', 
- NOW() + INTERVAL '1 day', NOW() + INTERVAL '1 day 7 hours', 420, 450.00),
-('NYC-LON-002', 'New York (JFK)', 'London (LHR)', 
- NOW() + INTERVAL '2 days', NOW() + INTERVAL '2 days 7 hours', 420, 450.00);
+('AI401', 'Mumbai (BOM)', 'Bengaluru (BLR)', NOW() + INTERVAL '1 day 5 hours', NOW() + INTERVAL '1 day 6 hours 50 minutes', 'Airbus A320', 'scheduled', 4300.00),
+('AI402', 'Mumbai (BOM)', 'Bengaluru (BLR)', NOW() + INTERVAL '4 days', NOW() + INTERVAL '4 days 1 hour 50 minutes', 'Airbus A320', 'scheduled', 4300.00),
 
--- Route 2: London to Paris
-INSERT INTO flights (route_code, origin, destination, departure_time, arrival_time, duration_minutes, base_price) VALUES
-('LON-PAR-001', 'London (LHR)', 'Paris (CDG)', 
- NOW() + INTERVAL '1 day 2 hours', NOW() + INTERVAL '1 day 3 hours 30 minutes', 90, 180.00),
-('LON-PAR-002', 'London (LHR)', 'Paris (CDG)', 
- NOW() + INTERVAL '3 days', NOW() + INTERVAL '3 days 1 hour 30 minutes', 90, 180.00);
+('AI501', 'Bengaluru (BLR)', 'Pune (PNQ)', NOW() + INTERVAL '1 day 7 hours', NOW() + INTERVAL '1 day 8 hours 40 minutes', 'Airbus A320', 'scheduled', 3900.00),
+('AI502', 'Bengaluru (BLR)', 'Pune (PNQ)', NOW() + INTERVAL '5 days', NOW() + INTERVAL '5 days 1 hour 40 minutes', 'Airbus A320', 'scheduled', 3900.00);
 
--- Route 3: Tokyo to Sydney
-INSERT INTO flights (route_code, origin, destination, departure_time, arrival_time, duration_minutes, base_price) VALUES
-('TYO-SYD-001', 'Tokyo (NRT)', 'Sydney (SYD)', 
- NOW() + INTERVAL '1 day 4 hours', NOW() + INTERVAL '1 day 14 hours', 600, 850.00),
-('TYO-SYD-002', 'Tokyo (NRT)', 'Sydney (SYD)', 
- NOW() + INTERVAL '4 days', NOW() + INTERVAL '4 days 10 hours', 600, 850.00);
+DROP FUNCTION IF EXISTS generate_seats_for_flight(UUID);
 
--- Route 4: Dubai to Singapore
-INSERT INTO flights (route_code, origin, destination, departure_time, arrival_time, duration_minutes, base_price) VALUES
-('DXB-SIN-001', 'Dubai (DXB)', 'Singapore (SIN)', 
- NOW() + INTERVAL '1 day 6 hours', NOW() + INTERVAL '1 day 9 hours', 180, 320.00),
-('DXB-SIN-002', 'Dubai (DXB)', 'Singapore (SIN)', 
- NOW() + INTERVAL '5 days', NOW() + INTERVAL '5 days 3 hours', 180, 320.00);
-
--- Helper function to generate seats for a flight
 CREATE OR REPLACE FUNCTION generate_seats_for_flight(p_flight_id UUID)
 RETURNS VOID
 LANGUAGE plpgsql
@@ -41,65 +21,54 @@ DECLARE
   v_row INTEGER;
   v_col INTEGER;
   v_seat_number VARCHAR(10);
-  v_cabin_class VARCHAR(20);
-  v_price_multiplier DECIMAL(3, 2);
+  v_class VARCHAR(20);
+  v_extra_fee DECIMAL(10, 2);
 BEGIN
-  -- First class: Rows 1-2, Columns A-C (6 seats)
   FOR v_row IN 1..2 LOOP
     FOR v_col IN 1..3 LOOP
-      v_seat_number := v_row || CHR(64 + v_col);
-      v_cabin_class := 'first';
-      v_price_multiplier := 3.0;
-      
-      INSERT INTO seats (flight_id, seat_number, cabin_class, price_multiplier)
-      VALUES (p_flight_id, v_seat_number, v_cabin_class, v_price_multiplier);
+      v_seat_number := v_row::text || CHR(64 + v_col);
+      v_class := 'first';
+      v_extra_fee := 2500.00;
+
+      INSERT INTO seats (flight_id, seat_number, class, is_available, extra_fee)
+      VALUES (p_flight_id, v_seat_number, v_class, TRUE, v_extra_fee);
     END LOOP;
   END LOOP;
-  
-  -- Business class: Rows 3-6, Columns A-D (16 seats)
+
   FOR v_row IN 3..6 LOOP
-    FOR v_col IN 1..4 LOOP
-      v_seat_number := v_row || CHR(64 + v_col);
-      v_cabin_class := 'business';
-      v_price_multiplier := 2.0;
-      
-      INSERT INTO seats (flight_id, seat_number, cabin_class, price_multiplier)
-      VALUES (p_flight_id, v_seat_number, v_cabin_class, v_price_multiplier);
+    FOR v_col IN 1..3 LOOP
+      v_seat_number := v_row::text || CHR(64 + v_col);
+      v_class := 'business';
+      v_extra_fee := 1200.00;
+
+      INSERT INTO seats (flight_id, seat_number, class, is_available, extra_fee)
+      VALUES (p_flight_id, v_seat_number, v_class, TRUE, v_extra_fee);
     END LOOP;
   END LOOP;
-  
-  -- Economy class: Rows 7-20, Columns A-F (84 seats)
-  FOR v_row IN 7..20 LOOP
+
+  FOR v_row IN 7..16 LOOP
     FOR v_col IN 1..6 LOOP
-      v_seat_number := v_row || CHR(64 + v_col);
-      v_cabin_class := 'economy';
-      v_price_multiplier := 1.0;
-      
-      INSERT INTO seats (flight_id, seat_number, cabin_class, price_multiplier)
-      VALUES (p_flight_id, v_seat_number, v_cabin_class, v_price_multiplier);
+      v_seat_number := v_row::text || CHR(64 + v_col);
+      v_class := 'economy';
+      v_extra_fee := 0.00;
+
+      INSERT INTO seats (flight_id, seat_number, class, is_available, extra_fee)
+      VALUES (p_flight_id, v_seat_number, v_class, TRUE, v_extra_fee);
     END LOOP;
   END LOOP;
 END;
 $$;
 
--- Generate seats for all flights
 DO $$
 DECLARE
   v_flight_id UUID;
 BEGIN
   FOR v_flight_id IN SELECT id FROM flights LOOP
-    PERFORM generate_seats_for_flight(v_flight_id);
+    IF NOT EXISTS (
+      SELECT 1 FROM seats WHERE flight_id = v_flight_id
+    ) THEN
+      PERFORM generate_seats_for_flight(v_flight_id);
+    END IF;
   END LOOP;
 END $$;
 
--- Note: To create a test user, you'll need to do this in the Supabase dashboard
--- or via the auth API. Replace TEST_USER_UUID below with the actual UUID from auth.users
--- 
--- Example test booking (uncomment after creating test user):
--- INSERT INTO bookings (pnr, flight_id, seat_id, user_id, total_price)
--- SELECT 
---   'ABC123',
---   (SELECT id FROM flights LIMIT 1),
---   (SELECT id FROM seats WHERE flight_id = (SELECT id FROM flights LIMIT 1) LIMIT 1),
---   'TEST_USER_UUID',
---   450.00;

@@ -30,7 +30,7 @@ export default async function BookingDetailsPage({
 
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Booking Details</h1>
-          <p className="text-gray-600">PNR: {booking.pnr}</p>
+          <p className="text-gray-600">PNR: {booking.pnr_code}</p>
         </div>
 
         <BookingDetailsClient booking={booking} onCancel={cancelBooking} />

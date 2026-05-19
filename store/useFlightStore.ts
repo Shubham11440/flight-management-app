@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { SearchQuery, SelectedFlight, Seat } from '@/types';
+import type { SearchQuery, SelectedFlight, Seat, PassengerFormData } from '@/types';
 
 interface FlightState {
   // Search state
@@ -13,11 +13,17 @@ interface FlightState {
   // Selected seat
   selectedSeat: Seat | null;
   
+  // Booking flow state
+  currentBookingStep: 'search' | 'seats' | 'passengers' | 'confirmation';
+  passengerFormData: PassengerFormData | null;
+  
   // Actions
   setSearchQuery: (query: SearchQuery) => void;
   setSearchResults: (results: any[]) => void;
   setSelectedFlight: (flight: SelectedFlight) => void;
   setSelectedSeat: (seat: Seat) => void;
+  setBookingStep: (step: 'search' | 'seats' | 'passengers' | 'confirmation') => void;
+  setPassengerFormData: (data: PassengerFormData) => void;
   resetSearch: () => void;
   resetSelection: () => void;
   resetAll: () => void;
@@ -31,18 +37,24 @@ export const useFlightStore = create<FlightState>()(
       searchResults: null,
       selectedFlight: null,
       selectedSeat: null,
+      currentBookingStep: 'search',
+      passengerFormData: null,
       
       // Actions
       setSearchQuery: (query) => set({ searchQuery: query }),
       setSearchResults: (results) => set({ searchResults: results }),
       setSelectedFlight: (flight) => set({ selectedFlight: flight }),
       setSelectedSeat: (seat) => set({ selectedSeat: seat }),
+      setBookingStep: (step) => set({ currentBookingStep: step }),
+      setPassengerFormData: (data) => set({ passengerFormData: data }),
       
       resetSearch: () => set({ searchQuery: null, searchResults: null }),
       
       resetSelection: () => set({ 
         selectedFlight: null, 
-        selectedSeat: null 
+        selectedSeat: null,
+        currentBookingStep: 'search',
+        passengerFormData: null,
       }),
       
       resetAll: () => set({
@@ -50,15 +62,23 @@ export const useFlightStore = create<FlightState>()(
         searchResults: null,
         selectedFlight: null,
         selectedSeat: null,
+        currentBookingStep: 'search',
+        passengerFormData: null,
       }),
     }),
     {
       name: 'flight-storage',
       storage: createJSONStorage(() => localStorage),
-      // Partialize to persist only non-sensitive data
+      // Partialize to persist only non-sensitive data (exclude passport numbers)
       partialize: (state) => ({
         searchQuery: state.searchQuery,
-        selectedFlight: state.selectedFlight,
+        selectedFlight: state.selectedFlight ? {
+          flight: state.selectedFlight.flight,
+          seat: state.selectedFlight.seat,
+          cabinClass: state.selectedFlight.cabinClass,
+        } : null,
+        currentBookingStep: state.currentBookingStep,
+        // Exclude passengerFormData which contains passport_no
       }),
     }
   )

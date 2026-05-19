@@ -22,15 +22,12 @@ export async function createBooking(formData: FormData) {
     redirect('/search');
   }
 
-  const pnr = generatePNR();
-
   try {
     // Call the RPC function to reserve the seat atomically
     const { data: bookingId, error: bookingError } = await supabase.rpc('reserve_seat', {
       p_flight_id: selectedFlight.flight.id,
       p_seat_id: selectedSeat.id,
       p_user_id: user.id,
-      p_pnr: pnr,
     });
 
     if (bookingError) {
@@ -41,12 +38,10 @@ export async function createBooking(formData: FormData) {
     // Insert passenger details
     const { error: passengerError } = await supabase.from('passengers').insert({
       booking_id: bookingId,
-      first_name: formData.get('firstName') as string,
-      last_name: formData.get('lastName') as string,
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string || null,
-      passport_number: formData.get('passportNumber') as string || null,
-      date_of_birth: formData.get('dateOfBirth') as string || null,
+      full_name: formData.get('fullName') as string,
+      passport_no: formData.get('passportNo') as string,
+      nationality: formData.get('nationality') as string,
+      dob: formData.get('dob') as string,
     });
 
     if (passengerError) {
@@ -55,11 +50,18 @@ export async function createBooking(formData: FormData) {
       redirect(`/booking/passengers?error=${encodeURIComponent('Failed to save passenger details')}`);
     }
 
+    // Fetch the booking to get the PNR
+    const { data: booking } = await supabase
+      .from('bookings')
+      .select('pnr_code')
+      .eq('id', bookingId)
+      .single();
+
     // Reset the flight store
     useFlightStore.getState().resetSelection();
 
     revalidatePath('/', 'layout');
-    redirect(`/booking/confirmation?pnr=${pnr}`);
+    redirect(`/booking/confirmation?pnr=${booking?.pnr_code}`);
   } catch (error) {
     console.error('Unexpected error:', error);
     redirect(`/booking/passengers?error=${encodeURIComponent('An unexpected error occurred')}`);

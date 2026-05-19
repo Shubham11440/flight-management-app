@@ -1,50 +1,53 @@
--- RPC function to reserve a seat atomically with SELECT FOR UPDATE
 CREATE OR REPLACE FUNCTION reserve_seat(
   p_flight_id UUID,
   p_seat_id UUID,
   p_user_id UUID,
-  p_pnr VARCHAR(6)
+  p_total_price DECIMAL(10, 2),
+  p_pnr_code VARCHAR(6)
 )
 RETURNS UUID
 LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
 AS $$
 DECLARE
   v_booking_id UUID;
-  v_seat_status BOOLEAN;
 BEGIN
-  -- Lock the seat row to prevent double booking
-  SELECT is_occupied INTO v_seat_status
+  PERFORM 1
   FROM seats
-  WHERE id = p_seat_id AND flight_id = p_flight_id
+  WHERE id = p_seat_id
+    AND flight_id = p_flight_id
+    AND is_available = TRUE
   FOR UPDATE;
-  
-  -- Check if seat exists and is not occupied
+
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'Seat not found for this flight';
+    RAISE EXCEPTION 'Seat not available';
   END IF;
-  
-  IF v_seat_status = true THEN
-    RAISE EXCEPTION 'Seat is already occupied';
-  END IF;
-  
-  -- Mark seat as occupied
+
   UPDATE seats
-  SET is_occupied = true
+  SET is_available = FALSE
   WHERE id = p_seat_id;
-  
-  -- Create booking
-  INSERT INTO bookings (pnr, flight_id, seat_id, user_id, total_price)
-  SELECT 
-    p_pnr,
+
+  INSERT INTO bookings (
+    user_id,
+    flight_id,
+    seat_id,
+    status,
+    booked_at,
+    total_price,
+    pnr_code
+  )
+  VALUES (
+    p_user_id,
     p_flight_id,
     p_seat_id,
-    p_user_id,
-    f.base_price * s.price_multiplier
-  FROM flights f
-  JOIN seats s ON s.flight_id = f.id
-  WHERE f.id = p_flight_id AND s.id = p_seat_id
+    'confirmed',
+    NOW(),
+    p_total_price,
+    p_pnr_code
+  )
   RETURNING id INTO v_booking_id;
-  
+
   RETURN v_booking_id;
 END;
 $$;

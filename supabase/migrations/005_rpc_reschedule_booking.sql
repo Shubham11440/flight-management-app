@@ -1,94 +1,121 @@
--- RPC function to reschedule a booking atomically
 CREATE OR REPLACE FUNCTION reschedule_booking(
   p_booking_id UUID,
   p_user_id UUID,
   p_new_flight_id UUID,
-  p_new_seat_id UUID,
-  p_rescheduled_by UUID
+  p_new_seat_id UUID
 )
-RETURNS UUID
+RETURNS JSON
 LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
 AS $$
 DECLARE
   v_old_flight_id UUID;
   v_old_seat_id UUID;
-  v_old_price DECIMAL(10, 2);
-  v_new_price DECIMAL(10, 2);
-  v_fee_difference DECIMAL(10, 2);
-  v_reschedule_id UUID;
-  v_seat_status BOOLEAN;
+  v_old_total_price DECIMAL(10, 2);
+  v_old_origin VARCHAR(100);
+  v_old_destination VARCHAR(100);
+  v_new_origin VARCHAR(100);
+  v_new_destination VARCHAR(100);
+  v_new_base_price DECIMAL(10, 2);
+  v_new_extra_fee DECIMAL(10, 2);
+  v_new_total_price DECIMAL(10, 2);
+  v_fee_charged DECIMAL(10, 2);
 BEGIN
-  -- Get current booking info and lock rows
-  SELECT flight_id, seat_id, total_price INTO v_old_flight_id, v_old_seat_id, v_old_price
-  FROM bookings
-  WHERE id = p_booking_id AND user_id = p_user_id AND status = 'confirmed'
+  SELECT
+    b.flight_id,
+    b.seat_id,
+    b.total_price,
+    f.origin,
+    f.destination
+  INTO
+    v_old_flight_id,
+    v_old_seat_id,
+    v_old_total_price,
+    v_old_origin,
+    v_old_destination
+  FROM bookings b
+  JOIN flights f ON f.id = b.flight_id
+  WHERE b.id = p_booking_id
+    AND b.user_id = p_user_id
+    AND b.status IN ('confirmed', 'rescheduled')
   FOR UPDATE;
-  
+
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'Booking not found or cannot be rescheduled';
+    RAISE EXCEPTION 'Booking not found or not eligible for reschedule';
   END IF;
-  
-  -- Lock the new seat to prevent double booking
-  SELECT is_occupied INTO v_seat_status
-  FROM seats
-  WHERE id = p_new_seat_id AND flight_id = p_new_flight_id
+
+  SELECT
+    origin,
+    destination
+  INTO
+    v_new_origin,
+    v_new_destination
+  FROM flights
+  WHERE id = p_new_flight_id;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'New flight not found';
+  END IF;
+
+  IF v_old_origin <> v_new_origin OR v_old_destination <> v_new_destination THEN
+    RAISE EXCEPTION 'New flight must be on the same route';
+  END IF;
+
+  SELECT
+    f.base_price,
+    s.extra_fee
+  INTO
+    v_new_base_price,
+    v_new_extra_fee
+  FROM seats s
+  JOIN flights f ON f.id = s.flight_id
+  WHERE s.id = p_new_seat_id
+    AND s.flight_id = p_new_flight_id
+    AND s.is_available = TRUE
   FOR UPDATE;
-  
+
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'New seat not found for the new flight';
+    RAISE EXCEPTION 'New seat not available';
   END IF;
-  
-  IF v_seat_status = true THEN
-    RAISE EXCEPTION 'New seat is already occupied';
-  END IF;
-  
-  -- Calculate new price
-  SELECT f.base_price * s.price_multiplier INTO v_new_price
-  FROM flights f
-  JOIN seats s ON s.flight_id = f.id
-  WHERE f.id = p_new_flight_id AND s.id = p_new_seat_id;
-  
-  v_fee_difference := v_new_price - v_old_price;
-  
-  -- Release old seat
+
+  v_new_total_price := v_new_base_price + v_new_extra_fee;
+  v_fee_charged := GREATEST(v_new_total_price - v_old_total_price, 0);
+
   UPDATE seats
-  SET is_occupied = false
+  SET is_available = TRUE
   WHERE id = v_old_seat_id;
-  
-  -- Occupy new seat
+
   UPDATE seats
-  SET is_occupied = true
+  SET is_available = FALSE
   WHERE id = p_new_seat_id;
-  
-  -- Update booking with new flight and seat
+
   UPDATE bookings
-  SET 
+  SET
     flight_id = p_new_flight_id,
     seat_id = p_new_seat_id,
-    total_price = v_new_price,
-    status = 'rescheduled'
+    status = 'rescheduled',
+    total_price = v_new_total_price
   WHERE id = p_booking_id;
-  
-  -- Create reschedule audit record
+
   INSERT INTO reschedules (
     booking_id,
     old_flight_id,
-    old_seat_id,
     new_flight_id,
-    new_seat_id,
-    fee_difference,
-    rescheduled_by
-  ) VALUES (
+    requested_at,
+    fee_charged
+  )
+  VALUES (
     p_booking_id,
     v_old_flight_id,
-    v_old_seat_id,
     p_new_flight_id,
-    p_new_seat_id,
-    v_fee_difference,
-    p_rescheduled_by
-  )
-  RETURNING id INTO v_reschedule_id;
-  
-  RETURN v_reschedule_id;
+    NOW(),
+    v_fee_charged
+  );
+
+  RETURN json_build_object(
+    'success', true,
+    'fee_charged', v_fee_charged
+  );
 END;
 $$;

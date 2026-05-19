@@ -43,8 +43,8 @@ export default function RescheduleModal({
       .from('flights')
       .select('*')
       .neq('id', currentFlightId)
-      .gte('departure_time', new Date().toISOString())
-      .order('departure_time', { ascending: true })
+      .gte('departs_at', new Date().toISOString())
+      .order('departs_at', { ascending: true })
       .limit(10);
 
     if (data) {
@@ -60,7 +60,7 @@ export default function RescheduleModal({
       .from('seats')
       .select('*')
       .eq('flight_id', flightId)
-      .eq('is_occupied', false)
+      .eq('is_available', true)
       .order('seat_number');
 
     if (data) {
@@ -91,7 +91,7 @@ export default function RescheduleModal({
   };
 
   const newPrice = selectedFlight && selectedSeat
-    ? selectedFlight.base_price * selectedSeat.price_multiplier
+    ? selectedFlight.base_price + selectedSeat.extra_fee
     : 0;
   const priceDifference = newPrice - currentPrice;
 
@@ -130,7 +130,7 @@ export default function RescheduleModal({
                   >
                     <div className="flex justify-between items-center">
                       <div>
-                        <p className="font-medium text-gray-900">{flight.route_code}</p>
+                        <p className="font-medium text-gray-900">{flight.flight_no}</p>
                         <p className="text-sm text-gray-600">
                           {flight.origin} → {flight.destination}
                         </p>

@@ -12,7 +12,7 @@ export async function searchFlights(params: {
   let query = supabase
     .from('flights')
     .select('*')
-    .gte('departure_time', new Date().toISOString());
+    .gte('departs_at', new Date().toISOString());
 
   if (params.origin) {
     query = query.ilike('origin', `%${params.origin}%`);
@@ -27,10 +27,10 @@ export async function searchFlights(params: {
     const endDate = new Date(params.departure_date);
     endDate.setHours(23, 59, 59, 999);
     
-    query = query.gte('departure_time', startDate.toISOString()).lte('departure_time', endDate.toISOString());
+    query = query.gte('departs_at', startDate.toISOString()).lte('departs_at', endDate.toISOString());
   }
 
-  const { data, error } = await query.order('departure_time', { ascending: true });
+  const { data, error } = await query.order('departs_at', { ascending: true });
 
   if (error) {
     console.error('Error searching flights:', error);

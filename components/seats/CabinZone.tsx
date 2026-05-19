@@ -57,7 +57,7 @@ export default function CabinZone({
                       key={seat.id}
                       seat={seat}
                       isSelected={selectedSeat?.id === seat.id}
-                      isOccupied={seat.is_occupied}
+                      isOccupied={!seat.is_available}
                       onSelect={onSelect}
                       basePrice={basePrice}
                       selectedCabinClass={selectedCabinClass}

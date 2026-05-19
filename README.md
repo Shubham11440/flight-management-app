@@ -108,33 +108,47 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ## Database Schema
 
-The application uses the following tables:
+The application uses the following tables (matching the Technical Assignment requirements):
 
-- **flights**: Flight information with route, schedule, and pricing
-- **seats**: Seat inventory with cabin class and occupancy status
-- **bookings**: Booking records with PNR and status
-- **passengers**: Passenger details for each booking
-- **reschedules**: Audit trail for booking reschedules
+- **flights**: Flight information with flight_no, route, schedule (departs_at, arrives_at), aircraft_type, status, and base_price
+- **seats**: Seat inventory with seat_number, class (first/business/economy), is_available, and extra_fee
+- **bookings**: Booking records with PNR, status, booked_at, and total_price
+- **passengers**: Passenger details with full_name, passport_no, nationality, and dob
+- **reschedules**: Audit trail for booking reschedules with requested_at and fee_charged
 
 ### Key Features
 
-- **Row Level Security (RLS)**: Policies ensure users can only access their own data
-- **Atomic Operations**: RPC functions (`reserve_seat`, `cancel_booking`, `reschedule_booking`) prevent race conditions
-- **Cancellation Window**: Database trigger prevents cancellations within 2 hours of departure
+- **Row Level Security (RLS)**: Policies ensure users can only access their own bookings
+- **Atomic Operations**: RPC functions (`reserve_seat`, `cancel_booking`, `reschedule_booking`) prevent race conditions using SELECT FOR UPDATE
+- **Cancellation Window**: Database trigger prevents cancellations within 2 hours of departure (enforced at DB level)
 - **Real-time Updates**: Seats table subscribed to Supabase Realtime for live availability
+
+### Schema Changes
+
+The database schema has been updated to match the Technical Assignment requirements:
+- flights: Added `flight_no`, `aircraft_type`, `status`; changed `departure_time` to `departs_at`, `arrival_time` to `arrives_at`
+- seats: Changed `cabin_class` to `class`, `is_occupied` to `is_available`, `price_multiplier` to `extra_fee`
+- passengers: Changed `first_name`, `last_name` to `full_name`; `passport_number` to `passport_no`; added `nationality`, `dob`; removed `email`, `phone`
+- reschedules: Simplified to `old_flight_id`, `new_flight_id`, `requested_at`, `fee_charged`
+
+**Additional Schema Improvements:**
+- Added NOT NULL constraints to all critical fields for data integrity
+- Added ON DELETE CASCADE to foreign keys for automatic cleanup
+- Added check constraints for positive values (price, extra_fee, fee_charged)
 
 ## State Management
 
-The app uses Zustand with persistence middleware:
+The app uses Zustand with persistence middleware (matching Technical Assignment requirements):
 
-- **useFlightStore**: Manages search query, selected flight, and selected seat
-  - Persists search data across sessions
-  - Excludes sensitive data (passport numbers) from localStorage
+- **useFlightStore**: Manages search query, selected flight, selected seat, current booking step, and passenger form data
+  - Persists search data and booking progress across sessions
+  - Uses `partialize` to exclude sensitive data (passport numbers) from localStorage
   - Includes reset actions for logout and cancellation
+  - Supports optimistic seat selection
 
-- **useUserStore**: Manages user authentication state
-  - Persists user session across sessions
-  - Includes logout action
+- **useUserStore**: Manages user authentication state and cached bookings
+  - Persists only the session token (not full user data) as per assignment requirements
+  - Includes logout and reset actions
 
 ## Implementation Commits
 
@@ -175,11 +189,54 @@ The app can be deployed to any platform that supports Next.js:
 
 ## Testing
 
+### Test User Setup
+
 Create a test user in Supabase Auth to test the booking flow:
 1. Go to Supabase Dashboard → Authentication
-2. Create a new user
+2. Create a new user with email and password
 3. Use these credentials to sign in
+
+**Test User Credentials:**
+- Email: test@flightapp.com
+- Password: Test1234!
+
+### Seed Data
+
+The seed.sql file includes:
+- 8 flights across 4 routes (NYC-LON, LON-PAR, TYO-SYD, DXB-SIN)
+- Full seat maps for each flight (First, Business, Economy classes)
+- Seat pricing: First Class (+$900), Business Class (+$450), Economy (base price)
+
+### Running Migrations After Schema Changes
+
+If you need to re-run migrations after schema changes:
+
+1. Drop existing tables in Supabase SQL Editor:
+```sql
+DROP TABLE IF EXISTS reschedules CASCADE;
+DROP TABLE IF EXISTS passengers CASCADE;
+DROP TABLE IF EXISTS bookings CASCADE;
+DROP TABLE IF EXISTS seats CASCADE;
+DROP TABLE IF EXISTS flights CASCADE;
+```
+
+2. Re-run migrations in order (001 to 006) in Supabase SQL Editor
+
+3. Run seed.sql to populate test data
+
+### Important Notes
+
+- The schema has been updated to match the Technical Assignment requirements
+- All field names have been changed to match the assignment specifications
+- The pricing model changed from multipliers to extra fees
+- Passenger schema simplified to match assignment (removed email, phone; added nationality, dob)
 
 ## License
 
 This project is for demonstration purposes.
+
+
+
+-- Create the test user manually in Supabase Auth dashboard:
+-- Email: test@flightapp.com
+-- Password: Test1234!

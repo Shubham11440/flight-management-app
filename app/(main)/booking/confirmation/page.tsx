@@ -15,18 +15,13 @@ export default async function ConfirmationPage({
 
   const supabase = await createClient();
 
-  const { data: booking, error: bookingError } = await supabase
+  const { data: booking } = await supabase
     .from('bookings')
-    .select(`
-      *,
-      flight:flights(*),
-      seat:seats(*),
-      passenger:passengers(*)
-    `)
-    .eq('pnr', searchParams.pnr)
+    .select('*, flight:flights(*), seat:seats(*)')
+    .eq('pnr_code', searchParams.pnr)
     .single();
 
-  if (bookingError || !booking) {
+  if (!booking) {
     redirect('/search');
   }
 

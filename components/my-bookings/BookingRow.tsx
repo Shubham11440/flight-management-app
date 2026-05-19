@@ -43,12 +43,12 @@ export default function BookingRow({ booking, onViewDetails }: BookingRowProps) 
               {getStatusIcon()}
               {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
             </span>
-            <span className="text-sm font-medium text-blue-600">{booking.pnr}</span>
+            <span className="text-sm font-medium text-blue-600">{booking.pnr_code}</span>
           </div>
 
           <div className="flex items-center gap-2 mb-2">
             <Plane className="w-4 h-4 text-gray-500" />
-            <span className="font-medium text-gray-900">{booking.flight?.route_code}</span>
+            <span className="font-medium text-gray-900">{booking.flight?.flight_no}</span>
           </div>
 
           <div className="flex items-center gap-2 mb-2">
@@ -61,11 +61,11 @@ export default function BookingRow({ booking, onViewDetails }: BookingRowProps) 
           <div className="flex items-center gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-1">
               <Calendar className="w-4 h-4" />
-              {format(new Date(booking.flight?.departure_time || ''), 'MMM d, yyyy')}
+              {format(new Date(booking.flight?.departs_at || ''), 'MMM d, yyyy')}
             </div>
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
-              {format(new Date(booking.flight?.departure_time || ''), 'HH:mm')}
+              {format(new Date(booking.flight?.departs_at || ''), 'HH:mm')}
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function BookingRow({ booking, onViewDetails }: BookingRowProps) 
         <div className="text-right">
           <p className="text-sm text-gray-500">Seat</p>
           <p className="font-medium text-gray-900">{booking.seat?.seat_number}</p>
-          <p className="text-xs text-gray-500 capitalize">{booking.seat?.cabin_class}</p>
+          <p className="text-xs text-gray-500 capitalize">{booking.seat?.class}</p>
         </div>
 
         <div className="text-right">

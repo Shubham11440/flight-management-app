@@ -5,12 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 const passengerSchema = z.object({
-  firstName: z.string().min(2, 'First name must be at least 2 characters'),
-  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  phone: z.string().optional(),
-  passportNumber: z.string().optional(),
-  dateOfBirth: z.string().optional(),
+  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
+  passportNo: z.string().min(5, 'Passport number must be at least 5 characters'),
+  nationality: z.string().min(2, 'Nationality must be at least 2 characters'),
+  dob: z.string().min(1, 'Date of birth is required'),
 });
 
 type PassengerFormData = z.infer<typeof passengerSchema>;
@@ -39,94 +37,62 @@ export default function PassengerForm({ onSubmit, isLoading }: PassengerFormProp
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-            First Name *
-          </label>
-          <input
-            {...register('firstName')}
-            type="text"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-            placeholder="John"
-          />
-          {errors.firstName && (
-            <p className="mt-1 text-sm text-red-600">{errors.firstName.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-            Last Name *
-          </label>
-          <input
-            {...register('lastName')}
-            type="text"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-            placeholder="Doe"
-          />
-          {errors.lastName && (
-            <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>
-          )}
-        </div>
-      </div>
-
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-          Email *
+        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+          Full Name *
         </label>
         <input
-          {...register('email')}
-          type="email"
+          {...register('fullName')}
+          type="text"
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-          placeholder="john@example.com"
+          placeholder="John Doe"
         />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+        {errors.fullName && (
+          <p className="mt-1 text-sm text-red-600">{errors.fullName.message}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-          Phone
+        <label htmlFor="passportNo" className="block text-sm font-medium text-gray-700 mb-2">
+          Passport Number *
         </label>
         <input
-          {...register('phone')}
-          type="tel"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-          placeholder="+1 234 567 8900"
-        />
-        {errors.phone && (
-          <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
-        )}
-      </div>
-
-      <div>
-        <label htmlFor="passportNumber" className="block text-sm font-medium text-gray-700 mb-2">
-          Passport Number
-        </label>
-        <input
-          {...register('passportNumber')}
+          {...register('passportNo')}
           type="text"
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
           placeholder="A12345678"
         />
-        {errors.passportNumber && (
-          <p className="mt-1 text-sm text-red-600">{errors.passportNumber.message}</p>
+        {errors.passportNo && (
+          <p className="mt-1 text-sm text-red-600">{errors.passportNo.message}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 mb-2">
-          Date of Birth
+        <label htmlFor="nationality" className="block text-sm font-medium text-gray-700 mb-2">
+          Nationality *
         </label>
         <input
-          {...register('dateOfBirth')}
+          {...register('nationality')}
+          type="text"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+          placeholder="United States"
+        />
+        {errors.nationality && (
+          <p className="mt-1 text-sm text-red-600">{errors.nationality.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-2">
+          Date of Birth *
+        </label>
+        <input
+          {...register('dob')}
           type="date"
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
         />
-        {errors.dateOfBirth && (
-          <p className="mt-1 text-sm text-red-600">{errors.dateOfBirth.message}</p>
+        {errors.dob && (
+          <p className="mt-1 text-sm text-red-600">{errors.dob.message}</p>
         )}
       </div>
 
