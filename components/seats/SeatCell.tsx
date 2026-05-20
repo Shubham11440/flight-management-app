@@ -2,6 +2,7 @@
 
 import { Check, X, DollarSign } from 'lucide-react';
 import type { Seat } from '@/types';
+import { formatPrice } from '@/lib/utils/price';
 
 interface SeatCellProps {
   seat: Seat;
@@ -53,7 +54,7 @@ export default function SeatCell({
           ? `Seat ${seat.seat_number} is occupied`
           : isSelected
           ? `Seat ${seat.seat_number} selected`
-          : `${seat.class} class - $${seatPrice.toFixed(2)}${extraFee > 0 ? ` (+$${extraFee.toFixed(2)})` : ''}`
+          : `${seat.class} class - ${formatPrice(seatPrice)}${extraFee > 0 ? ` (+${formatPrice(extraFee)})` : ''}`
       }
     >
       {isOccupied ? (

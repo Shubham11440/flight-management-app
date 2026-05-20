@@ -1,24 +1,32 @@
-import { useFlightStore } from '@/store/useFlightStore';
 import PassengerForm from '@/components/booking/PassengerForm';
 import { ArrowLeft, Plane, User } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { createBooking } from '@/lib/actions/bookings';
+import { getFlightById } from '@/lib/queries/flights';
+import { getSeatById } from '@/lib/queries/seats';
+import { formatPrice } from '@/lib/utils/price';
 
-export default function PassengerDetailsPage({
+export default async function PassengerDetailsPage({
   searchParams,
 }: {
-  searchParams: { error?: string };
+  searchParams: Promise<{ flightId?: string; seatId?: string; cabin?: string; error?: string }>;
 }) {
-  const selectedFlight = useFlightStore.getState().selectedFlight;
-  const selectedSeat = useFlightStore.getState().selectedSeat;
+  const params = await searchParams;
+  const { flightId, seatId, error } = params;
 
-  if (!selectedFlight || !selectedSeat) {
+  if (!flightId || !seatId) {
     redirect('/search');
   }
 
-  const flight = selectedFlight.flight;
-  const seat = selectedSeat;
+  const [flight, seat] = await Promise.all([
+    getFlightById(flightId),
+    getSeatById(seatId),
+  ]);
+
+  if (!flight || !seat) {
+    redirect('/search');
+  }
+
   const basePrice = flight.base_price;
   const totalPrice = basePrice + seat.extra_fee;
 
@@ -38,9 +46,9 @@ export default function PassengerDetailsPage({
           <p className="text-gray-600">Please provide passenger information to complete your booking</p>
         </div>
 
-        {searchParams.error && (
+        {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600 text-sm">{searchParams.error}</p>
+            <p className="text-red-600 text-sm">{error}</p>
           </div>
         )}
 
@@ -54,7 +62,7 @@ export default function PassengerDetailsPage({
                 <h2 className="text-xl font-bold text-gray-900">Passenger Information</h2>
               </div>
 
-              <PassengerForm onSubmit={createBooking} />
+              <PassengerForm flightId={flightId} seatId={seatId} />
             </div>
           </div>
 
@@ -84,17 +92,17 @@ export default function PassengerDetailsPage({
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Base Price</span>
-                    <span className="font-medium">${basePrice.toFixed(2)}</span>
+                    <span className="font-medium">{formatPrice(basePrice)}</span>
                   </div>
                   {seat.extra_fee > 0 && (
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-gray-500">Seat Premium</span>
-                      <span className="text-gray-700">+${seat.extra_fee.toFixed(2)}</span>
+                      <span className="text-gray-700">+{formatPrice(seat.extra_fee)}</span>
                     </div>
                   )}
                   <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
                     <span className="font-bold text-gray-900">Total</span>
-                    <span className="font-bold text-2xl text-purple-600">${totalPrice.toFixed(2)}</span>
+                    <span className="font-bold text-2xl text-purple-600">{formatPrice(totalPrice)}</span>
                   </div>
                 </div>
               </div>

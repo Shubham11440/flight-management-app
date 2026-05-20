@@ -1,13 +1,15 @@
 import { format } from 'date-fns';
 import { Plane, Calendar, Clock, MapPin, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import type { Booking } from '@/types';
+import { formatPrice } from '@/lib/utils/price';
+import Link from 'next/link';
 
 interface BookingRowProps {
   booking: Booking;
-  onViewDetails: (bookingId: string) => void;
+  bookingId: string;
 }
 
-export default function BookingRow({ booking, onViewDetails }: BookingRowProps) {
+export default function BookingRow({ booking, bookingId }: BookingRowProps) {
   const getStatusColor = () => {
     switch (booking.status) {
       case 'confirmed':
@@ -35,52 +37,54 @@ export default function BookingRow({ booking, onViewDetails }: BookingRowProps) 
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-[1.01]" onClick={() => onViewDetails(booking.id)}>
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-3">
-            <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${getStatusColor()}`}>
-              {getStatusIcon()}
-              {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-            </span>
-            <span className="text-sm font-semibold text-purple-600">{booking.pnr_code}</span>
-          </div>
-
-          <div className="flex items-center gap-2 mb-2">
-            <Plane className="w-4 h-4 text-purple-600" />
-            <span className="font-medium text-gray-900">{booking.flight?.flight_no}</span>
-          </div>
-
-          <div className="flex items-center gap-2 mb-2">
-            <MapPin className="w-4 h-4 text-purple-600" />
-            <span className="text-gray-700">
-              {booking.flight?.origin} → {booking.flight?.destination}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-1">
-              <Calendar className="w-4 h-4" />
-              {format(new Date(booking.flight?.departs_at || ''), 'MMM d, yyyy')}
+    <Link href={`/my-bookings/${bookingId}`}>
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-[1.01]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-3">
+              <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${getStatusColor()}`}>
+                {getStatusIcon()}
+                {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+              </span>
+              <span className="text-sm font-semibold text-purple-600">{booking.pnr_code}</span>
             </div>
-            <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              {format(new Date(booking.flight?.departs_at || ''), 'HH:mm')}
+
+            <div className="flex items-center gap-2 mb-2">
+              <Plane className="w-4 h-4 text-purple-600" />
+              <span className="font-medium text-gray-900">{booking.flight?.flight_no}</span>
+            </div>
+
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin className="w-4 h-4 text-purple-600" />
+              <span className="text-gray-700">
+                {booking.flight?.origin} → {booking.flight?.destination}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                {format(new Date(booking.flight?.departs_at || ''), 'MMM d, yyyy')}
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                {format(new Date(booking.flight?.departs_at || ''), 'HH:mm')}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="text-right bg-gray-50 rounded-xl p-4 min-w-[96px]">
-          <p className="text-sm text-gray-500">Seat</p>
-          <p className="font-medium text-gray-900">{booking.seat?.seat_number}</p>
-          <p className="text-xs text-gray-500 capitalize">{booking.seat?.class}</p>
-        </div>
+          <div className="text-right bg-gray-50 rounded-xl p-4 min-w-[96px]">
+            <p className="text-sm text-gray-500">Seat</p>
+            <p className="font-medium text-gray-900">{booking.seat?.seat_number}</p>
+            <p className="text-xs text-gray-500 capitalize">{booking.seat?.class}</p>
+          </div>
 
-        <div className="text-right bg-green-50 rounded-xl p-4 min-w-[112px]">
-          <p className="text-sm text-gray-500">Total</p>
-          <p className="font-bold text-lg text-green-600">${booking.total_price.toFixed(2)}</p>
+          <div className="text-right bg-green-50 rounded-xl p-4 min-w-[112px]">
+            <p className="text-sm text-gray-500">Total</p>
+            <p className="font-bold text-lg text-green-600">{formatPrice(booking.total_price)}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

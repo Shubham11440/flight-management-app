@@ -18,12 +18,11 @@ export async function rescheduleBooking(formData: FormData) {
   const newSeatId = formData.get('newSeatId') as string;
 
   try {
-    const { data: rescheduleId, error } = await supabase.rpc('reschedule_booking', {
+    const { data, error } = await supabase.rpc('reschedule_booking', {
       p_booking_id: bookingId,
       p_user_id: user.id,
       p_new_flight_id: newFlightId,
       p_new_seat_id: newSeatId,
-      p_fee_charged: 0, // Calculate fee based on price difference
     });
 
     if (error) {

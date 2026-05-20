@@ -1,69 +1,82 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { generatePNR } from '@/lib/utils/pnr';
-import { useFlightStore } from '@/store/useFlightStore';
+import { getFlightById } from '@/lib/queries/flights';
+import { getSeatById } from '@/lib/queries/seats';
 
-export async function createBooking(formData: FormData) {
+export async function createBooking(formData: FormData, flightId?: string, seatId?: string) {
   const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {
-    redirect('/login');
+    return { error: 'User not authenticated' };
   }
 
-  const selectedFlight = useFlightStore.getState().selectedFlight;
-  const selectedSeat = useFlightStore.getState().selectedSeat;
+  const actualFlightId = (formData.get('flightId') as string) || flightId;
+  const actualSeatId = (formData.get('seatId') as string) || seatId;
+  const fullName = formData.get('fullName') as string;
+  const passportNo = formData.get('passportNo') as string;
+  const nationality = formData.get('nationality') as string;
+  const dob = formData.get('dob') as string;
 
-  if (!selectedFlight || !selectedSeat) {
-    redirect('/search');
+  if (!actualFlightId || !actualSeatId) {
+    return { error: 'Missing flightId or seatId' };
   }
 
   try {
+    const flight = await getFlightById(actualFlightId);
+    const seat = await getSeatById(actualSeatId);
+
+    if (!flight || !seat) {
+      return { error: 'Flight or seat not found' };
+    }
+
+    // Calculate total price
+    const totalPrice = flight.base_price + seat.extra_fee;
+    const pnrCode = generatePNR();
+
     // Call the RPC function to reserve the seat atomically
     const { data: bookingId, error: bookingError } = await supabase.rpc('reserve_seat', {
-      p_flight_id: selectedFlight.flight.id,
-      p_seat_id: selectedSeat.id,
+      p_flight_id: flight.id,
+      p_seat_id: seat.id,
       p_user_id: user.id,
+      p_total_price: totalPrice,
+      p_pnr_code: pnrCode,
     });
 
     if (bookingError) {
       console.error('Booking error:', bookingError);
-      redirect(`/seats/${selectedFlight.flight.id}?error=${encodeURIComponent(bookingError.message)}`);
+      return { error: bookingError.message };
+    }
+
+    if (!bookingId) {
+      return { error: 'Failed to create booking' };
     }
 
     // Insert passenger details
-    const { error: passengerError } = await supabase.from('passengers').insert({
-      booking_id: bookingId,
-      full_name: formData.get('fullName') as string,
-      passport_no: formData.get('passportNo') as string,
-      nationality: formData.get('nationality') as string,
-      dob: formData.get('dob') as string,
-    });
+    const { error: passengerError } = await supabase
+      .from('passengers')
+      .insert({
+        booking_id: bookingId,
+        full_name: fullName,
+        passport_no: passportNo,
+        nationality,
+        dob,
+      });
 
     if (passengerError) {
       console.error('Passenger error:', passengerError);
-      // In production, you might want to rollback the booking here
-      redirect(`/booking/passengers?error=${encodeURIComponent('Failed to save passenger details')}`);
+      return { error: passengerError.message };
     }
 
-    // Fetch the booking to get the PNR
-    const { data: booking } = await supabase
-      .from('bookings')
-      .select('pnr_code')
-      .eq('id', bookingId)
-      .single();
-
-    // Reset the flight store
-    useFlightStore.getState().resetSelection();
-
-    revalidatePath('/', 'layout');
-    redirect(`/booking/confirmation?pnr=${booking?.pnr_code}`);
+    revalidatePath('/my-bookings');
+    
+    return { success: true, bookingId };
   } catch (error) {
     console.error('Unexpected error:', error);
-    redirect(`/booking/passengers?error=${encodeURIComponent('An unexpected error occurred')}`);
+    return { error: 'An unexpected error occurred' };
   }
 }

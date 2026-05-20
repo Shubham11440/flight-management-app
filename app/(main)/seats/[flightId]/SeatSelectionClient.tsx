@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useFlightStore } from '@/store/useFlightStore';
+import { useSearchParams } from 'next/navigation';
 import SeatMap from '@/components/seats/SeatMap';
 import Link from 'next/link';
 import type { Flight, Seat } from '@/types';
+import { formatPrice } from '@/lib/utils/price';
 
 interface SeatSelectionClientProps {
   flight: Flight;
@@ -12,21 +14,24 @@ interface SeatSelectionClientProps {
 }
 
 export default function SeatSelectionClient({ flight, seats }: SeatSelectionClientProps) {
-  const { selectedFlight, setSelectedSeat } = useFlightStore();
+  const searchParams = useSearchParams();
+  const { setSelectedFlight, setSelectedSeat } = useFlightStore();
   const [selectedSeat, setSelectedSeatState] = useState<Seat | null>(null);
+  
+  const cabinParam = searchParams.get('cabin') as 'first' | 'business' | 'economy' | null;
+  const selectedCabinClass = cabinParam || 'economy';
 
   useEffect(() => {
-    if (!selectedFlight) {
-      window.location.href = '/flights';
+    if (cabinParam) {
+      setSelectedFlight({ flight, cabinClass: cabinParam });
     }
-  }, [selectedFlight]);
+  }, [cabinParam, flight, setSelectedFlight]);
 
   const handleSeatSelect = (seat: Seat) => {
     setSelectedSeatState(seat);
     setSelectedSeat(seat);
   };
 
-  const selectedCabinClass = selectedFlight?.cabinClass || 'economy';
   const basePrice = flight.base_price;
   const seatPrice = selectedSeat ? basePrice + selectedSeat.extra_fee : 0;
 
@@ -60,7 +65,7 @@ export default function SeatSelectionClient({ flight, seats }: SeatSelectionClie
             </div>
             <div>
               <p className="text-sm text-gray-500">Base Price</p>
-              <p className="font-medium text-gray-900">${basePrice.toFixed(2)}</p>
+              <p className="font-medium text-gray-900">{formatPrice(basePrice)}</p>
             </div>
           </div>
 
@@ -70,7 +75,7 @@ export default function SeatSelectionClient({ flight, seats }: SeatSelectionClie
               <div className="text-gray-900 bg-purple-50 rounded-xl p-4 border border-purple-100">
                 <p className="font-medium">{selectedSeat.seat_number}</p>
                 <p className="text-sm text-gray-600 capitalize">{selectedSeat.class} Class</p>
-                <p className="text-2xl font-bold text-purple-600">${seatPrice.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-purple-600">{formatPrice(seatPrice)}</p>
               </div>
             ) : (
               <p className="text-gray-600">No seat selected</p>
@@ -79,7 +84,7 @@ export default function SeatSelectionClient({ flight, seats }: SeatSelectionClie
 
           {selectedSeat ? (
             <Link
-              href="/booking/passengers"
+              href={`/booking/passengers?flightId=${flight.id}&seatId=${selectedSeat.id}&cabin=${selectedCabinClass}`}
               className="block w-full py-4 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 text-center font-semibold shadow-lg hover:shadow-xl"
             >
               Continue to Passenger Details

@@ -45,7 +45,7 @@ export default async function MyBookingsPage() {
               <BookingRow
                 key={booking.id}
                 booking={booking}
-                onViewDetails={(bookingId) => redirect(`/my-bookings/${bookingId}`)}
+                bookingId={booking.id}
               />
             ))}
           </div>

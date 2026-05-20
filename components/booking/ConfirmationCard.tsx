@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
-import { CheckCircle, Plane, Calendar, Clock, MapPin, DollarSign } from 'lucide-react';
 import type { Booking, Flight, Seat } from '@/types';
+import { CheckCircle, Plane, Calendar, Clock, MapPin } from 'lucide-react';
+import { formatPrice } from '@/lib/utils/price';
 
 interface ConfirmationCardProps {
   booking: Booking;
@@ -83,10 +84,12 @@ export default function ConfirmationCard({ booking, flight, seat }: Confirmation
         </div>
 
         <div className="flex items-center gap-3 rounded-xl bg-green-50 p-4">
-          <DollarSign className="w-5 h-5 text-green-600" />
+          <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
+            <span className="text-green-600 text-xs font-bold">₹</span>
+          </div>
           <div>
             <p className="text-sm text-gray-500">Total Paid</p>
-            <p className="font-bold text-xl text-green-600">${booking.total_price.toFixed(2)}</p>
+            <p className="font-bold text-xl text-green-600">{formatPrice(booking.total_price)}</p>
           </div>
         </div>
       </div>

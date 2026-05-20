@@ -3,5 +3,9 @@ export function calculatePriceDifference(oldPrice: number, newPrice: number): nu
 }
 
 export function formatPrice(price: number): string {
-  return `$${price.toFixed(2)}`;
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(price);
 }

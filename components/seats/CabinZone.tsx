@@ -2,6 +2,7 @@
 
 import SeatCell from './SeatCell';
 import type { Seat } from '@/types';
+import { formatPrice } from '@/lib/utils/price';
 
 interface CabinZoneProps {
   title: string;
@@ -40,7 +41,7 @@ export default function CabinZone({
         <div className={`w-4 h-4 rounded ${color}`} />
         <h3 className="font-semibold text-gray-900">{title}</h3>
         <span className="text-sm text-gray-500">
-          ({seats.length} seats · ${basePrice.toFixed(2)})
+          ({seats.length} seats · {formatPrice(basePrice)})
         </span>
       </div>
 

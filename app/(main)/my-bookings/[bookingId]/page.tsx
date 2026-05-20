@@ -1,5 +1,4 @@
 import { getBookingById } from '@/lib/queries/bookings';
-import { cancelBooking } from '@/lib/actions/cancel';
 import { format } from 'date-fns';
 import { ArrowLeft, Plane, MapPin, Calendar, Clock, User, DollarSign, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
@@ -33,7 +32,7 @@ export default async function BookingDetailsPage({
           <p className="text-gray-600">PNR: {booking.pnr_code}</p>
         </div>
 
-        <BookingDetailsClient booking={booking} onCancel={cancelBooking} />
+        <BookingDetailsClient booking={booking} />
       </div>
     </div>
   );

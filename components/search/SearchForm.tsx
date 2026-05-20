@@ -27,7 +27,14 @@ export default function SearchForm() {
     };
     
     setSearchQuery(query);
-    router.push('/flights');
+    
+    const params = new URLSearchParams();
+    if (query.origin) params.set('origin', query.origin);
+    if (query.destination) params.set('destination', query.destination);
+    if (query.date) params.set('date', query.date);
+    if (query.passengers) params.set('passengers', query.passengers.toString());
+    
+    router.push(`/flights?${params.toString()}`);
   };
 
   return (
@@ -45,8 +52,8 @@ export default function SearchForm() {
                 type="text"
                 value={formData.origin}
                 onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
-                placeholder="New York"
-                className="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all hover:border-purple-300 bg-gray-50"
+                placeholder="Delhi"
+                className="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all hover:border-purple-300 bg-gray-50 text-gray-900 placeholder:text-gray-400"
               />
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             </div>
@@ -63,8 +70,8 @@ export default function SearchForm() {
                 type="text"
                 value={formData.destination}
                 onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                placeholder="London"
-                className="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all hover:border-purple-300 bg-gray-50"
+                placeholder="Mumbai"
+                className="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all hover:border-purple-300 bg-gray-50 text-gray-900 placeholder:text-gray-400"
               />
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             </div>
@@ -82,7 +89,7 @@ export default function SearchForm() {
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all hover:border-purple-300 bg-gray-50"
+                className="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all hover:border-purple-300 bg-gray-50 text-gray-900 placeholder:text-gray-400"
               />
               <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             </div>
@@ -98,7 +105,7 @@ export default function SearchForm() {
                 id="passengers"
                 value={formData.passengers}
                 onChange={(e) => setFormData({ ...formData, passengers: e.target.value })}
-                className="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all hover:border-purple-300 bg-gray-50 appearance-none cursor-pointer"
+                className="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all hover:border-purple-300 bg-gray-50 text-gray-900 appearance-none cursor-pointer"
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
                   <option key={num} value={num}>

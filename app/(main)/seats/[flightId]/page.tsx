@@ -8,15 +8,16 @@ import { redirect } from 'next/navigation';
 export default async function SeatSelectionPage({
   params,
 }: {
-  params: { flightId: string };
+  params: Promise<{ flightId: string }>;
 }) {
-  const flight = await getFlightById(params.flightId);
+  const { flightId } = await params;
+  const flight = await getFlightById(flightId);
 
   if (!flight) {
     redirect('/search');
   }
 
-  const seats = await getSeatsByFlightId(params.flightId);
+  const seats = await getSeatsByFlightId(flightId);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">

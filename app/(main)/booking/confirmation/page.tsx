@@ -14,11 +14,17 @@ export default async function ConfirmationPage({
   }
 
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
 
   const { data: booking } = await supabase
     .from('bookings')
     .select('*, flight:flights(*), seat:seats(*)')
     .eq('pnr_code', searchParams.pnr)
+    .eq('user_id', user.id)
     .single();
 
   if (!booking) {

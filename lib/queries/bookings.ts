@@ -51,7 +51,6 @@ export async function getBookingById(bookingId: string) {
     .single();
 
   if (error) {
-    console.error('Error fetching booking:', error);
     return null;
   }
 

@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { RefreshCw, Plane, MapPin, Calendar, Clock, User } from 'lucide-react';
-import RescheduleModal from '@/components/my-bookings/RescheduleModal';
 import type { Booking } from '@/types';
+import RescheduleModal from '@/components/my-bookings/RescheduleModal';
+import { formatPrice } from '@/lib/utils/price';
+import { RefreshCw, Plane, MapPin, Calendar, Clock, User } from 'lucide-react';
 
 interface RescheduleClientProps {
   booking: Booking;
@@ -76,7 +77,7 @@ export default function RescheduleClient({ booking, onReschedule }: RescheduleCl
 
           <div className="pt-4 border-t">
             <p className="text-sm text-gray-500">Current Price</p>
-            <p className="text-2xl font-bold text-green-600">${booking.total_price.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-green-600">{formatPrice(booking.total_price)}</p>
           </div>
         </div>
       </div>

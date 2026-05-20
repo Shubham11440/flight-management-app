@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { RefreshCw, X, DollarSign, Clock } from 'lucide-react';
 import type { Flight, Seat } from '@/types';
+import { formatPrice } from '@/lib/utils/price';
 
 interface RescheduleModalProps {
   isOpen: boolean;
@@ -136,7 +137,7 @@ export default function RescheduleModal({
                         </p>
                       </div>
                       <p className="text-sm text-gray-500">
-                        ${flight.base_price.toFixed(2)}
+                        {formatPrice(flight.base_price)}
                       </p>
                     </div>
                   </button>
@@ -183,13 +184,12 @@ export default function RescheduleModal({
               <div>
                 <p className="text-sm text-gray-500">Price Difference</p>
                 <div className={`flex items-center gap-2 text-lg font-bold ${priceDifference > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                  <DollarSign className="w-5 h-5" />
-                  {priceDifference > 0 ? '+' : ''}${priceDifference.toFixed(2)}
+                  {priceDifference > 0 ? '+' : ''}{formatPrice(priceDifference)}
                 </div>
               </div>
               <div className="text-right">
                 <p className="text-sm text-gray-500">New Total</p>
-                <p className="text-lg font-bold text-gray-900">${newPrice.toFixed(2)}</p>
+                <p className="text-lg font-bold text-gray-900">{formatPrice(newPrice)}</p>
               </div>
             </div>
             <button

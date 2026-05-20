@@ -4,12 +4,14 @@ import { login } from '@/lib/actions/auth';
 import { Plane, ArrowRight, Shield, Clock, Globe, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { use } from 'react';
 
 export default function LoginPage({
   searchParams,
 }: {
-  searchParams: { error?: string };
+  searchParams: Promise<{ error?: string }>;
 }) {
+  const params = use(searchParams);
 
   return (
     <div className="min-h-screen flex">
@@ -112,9 +114,9 @@ export default function LoginPage({
               </p>
             </div>
 
-            {searchParams.error && (
+            {params.error && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl">
-                <p className="text-red-600 text-sm font-medium">{searchParams.error}</p>
+                <p className="text-red-600 text-sm font-medium">{params.error}</p>
               </div>
             )}
 
