@@ -23,18 +23,18 @@ export default function PassengerDetailsPage({
   const totalPrice = basePrice + seat.extra_fee;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Link
           href={`/seats/${flight.id}`}
-          className="inline-flex items-center gap-2 text-blue-600 hover:underline mb-6"
+          className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-8 font-medium transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Seat Selection
         </Link>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Passenger Details</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Passenger Details</h1>
           <p className="text-gray-600">Please provide passenger information to complete your booking</p>
         </div>
 
@@ -46,9 +46,11 @@ export default function PassengerDetailsPage({
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md p-8">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
               <div className="flex items-center gap-2 mb-6">
-                <User className="w-6 h-6 text-blue-600" />
+                <div className="p-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600">
+                  <User className="w-5 h-5 text-white" />
+                </div>
                 <h2 className="text-xl font-bold text-gray-900">Passenger Information</h2>
               </div>
 
@@ -57,12 +59,12 @@ export default function PassengerDetailsPage({
           </div>
 
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sticky top-8">
               <h2 className="text-xl font-bold text-gray-900 mb-4">Booking Summary</h2>
               
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <Plane className="w-5 h-5 text-gray-500" />
+                  <Plane className="w-5 h-5 text-purple-600" />
                   <div>
                     <p className="text-sm text-gray-500">Flight</p>
                     <p className="font-medium text-gray-900">{flight.flight_no}</p>
@@ -92,7 +94,7 @@ export default function PassengerDetailsPage({
                   )}
                   <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
                     <span className="font-bold text-gray-900">Total</span>
-                    <span className="font-bold text-xl text-green-600">${totalPrice.toFixed(2)}</span>
+                    <span className="font-bold text-2xl text-purple-600">${totalPrice.toFixed(2)}</span>
                   </div>
                 </div>
               </div>

@@ -81,7 +81,7 @@ export default function SeatMap({
     <div className="space-y-6">
       <SeatLegend />
 
-      <div className="bg-gray-50 rounded-lg p-4 mb-4">
+      <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl p-4 mb-4 border border-purple-100">
         <p className="text-sm text-gray-600 text-center">
           Front of plane
         </p>
@@ -117,7 +117,7 @@ export default function SeatMap({
         color="bg-green-100"
       />
 
-      <div className="bg-gray-50 rounded-lg p-4">
+      <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl p-4 border border-purple-100">
         <p className="text-sm text-gray-600 text-center">
           Back of plane
         </p>

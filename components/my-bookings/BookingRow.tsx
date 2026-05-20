@@ -35,7 +35,7 @@ export default function BookingRow({ booking, onViewDetails }: BookingRowProps) 
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition cursor-pointer" onClick={() => onViewDetails(booking.id)}>
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-[1.01]" onClick={() => onViewDetails(booking.id)}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-3">
@@ -43,16 +43,16 @@ export default function BookingRow({ booking, onViewDetails }: BookingRowProps) 
               {getStatusIcon()}
               {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
             </span>
-            <span className="text-sm font-medium text-blue-600">{booking.pnr_code}</span>
+            <span className="text-sm font-semibold text-purple-600">{booking.pnr_code}</span>
           </div>
 
           <div className="flex items-center gap-2 mb-2">
-            <Plane className="w-4 h-4 text-gray-500" />
+            <Plane className="w-4 h-4 text-purple-600" />
             <span className="font-medium text-gray-900">{booking.flight?.flight_no}</span>
           </div>
 
           <div className="flex items-center gap-2 mb-2">
-            <MapPin className="w-4 h-4 text-gray-500" />
+            <MapPin className="w-4 h-4 text-purple-600" />
             <span className="text-gray-700">
               {booking.flight?.origin} → {booking.flight?.destination}
             </span>
@@ -70,13 +70,13 @@ export default function BookingRow({ booking, onViewDetails }: BookingRowProps) 
           </div>
         </div>
 
-        <div className="text-right">
+        <div className="text-right bg-gray-50 rounded-xl p-4 min-w-[96px]">
           <p className="text-sm text-gray-500">Seat</p>
           <p className="font-medium text-gray-900">{booking.seat?.seat_number}</p>
           <p className="text-xs text-gray-500 capitalize">{booking.seat?.class}</p>
         </div>
 
-        <div className="text-right">
+        <div className="text-right bg-green-50 rounded-xl p-4 min-w-[112px]">
           <p className="text-sm text-gray-500">Total</p>
           <p className="font-bold text-lg text-green-600">${booking.total_price.toFixed(2)}</p>
         </div>

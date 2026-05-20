@@ -44,7 +44,7 @@ export default function CabinZone({
         </span>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 p-4 overflow-x-auto">
+      <div className="bg-gray-50 rounded-2xl border border-gray-100 p-4 overflow-x-auto">
         <div className="min-w-max">
           {sortedRows.map((row) => (
             <div key={row} className="flex items-center gap-2 mb-2 last:mb-0">

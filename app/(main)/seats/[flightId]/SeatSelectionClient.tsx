@@ -33,7 +33,7 @@ export default function SeatSelectionClient({ flight, seats }: SeatSelectionClie
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2">
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-8">
           <SeatMap
             flightId={flight.id}
             basePrice={basePrice}
@@ -44,7 +44,7 @@ export default function SeatSelectionClient({ flight, seats }: SeatSelectionClie
       </div>
 
       <div className="lg:col-span-1">
-        <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sticky top-8">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Flight Details</h2>
           
           <div className="space-y-3 mb-6">
@@ -67,10 +67,10 @@ export default function SeatSelectionClient({ flight, seats }: SeatSelectionClie
           <div className="border-t border-gray-200 pt-4 mb-6">
             <p className="text-sm text-gray-500 mb-2">Selected Seat</p>
             {selectedSeat ? (
-              <div className="text-gray-900">
+              <div className="text-gray-900 bg-purple-50 rounded-xl p-4 border border-purple-100">
                 <p className="font-medium">{selectedSeat.seat_number}</p>
                 <p className="text-sm text-gray-600 capitalize">{selectedSeat.class} Class</p>
-                <p className="text-lg font-bold text-green-600">${seatPrice.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-purple-600">${seatPrice.toFixed(2)}</p>
               </div>
             ) : (
               <p className="text-gray-600">No seat selected</p>
@@ -80,14 +80,14 @@ export default function SeatSelectionClient({ flight, seats }: SeatSelectionClie
           {selectedSeat ? (
             <Link
               href="/booking/passengers"
-              className="block w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-center font-medium"
+              className="block w-full py-4 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 text-center font-semibold shadow-lg hover:shadow-xl"
             >
               Continue to Passenger Details
             </Link>
           ) : (
             <button
               disabled
-              className="block w-full py-3 px-4 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed text-center font-medium"
+              className="block w-full py-4 px-4 bg-gray-200 text-gray-500 rounded-xl cursor-not-allowed text-center font-semibold"
             >
               Select a seat to continue
             </button>
