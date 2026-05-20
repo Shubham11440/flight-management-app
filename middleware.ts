@@ -34,16 +34,22 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  // Protected routes
-  const protectedPaths = ['/my-bookings', '/booking'];
-  const isProtectedPath = protectedPaths.some((path) =>
+  // Public routes (no authentication required)
+  const publicPaths = ['/login', '/signup'];
+  const isPublicPath = publicPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path)
   );
 
-  if (isProtectedPath && !session) {
+  // Redirect to login if not authenticated and trying to access protected route
+  if (!isPublicPath && !session) {
     const redirectUrl = new URL('/login', request.url);
     redirectUrl.searchParams.set('redirect', request.nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);
+  }
+
+  // Redirect authenticated users away from login/signup pages
+  if (isPublicPath && session) {
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   return supabaseResponse;
