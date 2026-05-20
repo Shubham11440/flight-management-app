@@ -12,7 +12,7 @@ export default function SearchForm() {
   const [formData, setFormData] = useState({
     origin: '',
     destination: '',
-    departure_date: '',
+    date: '',
     passengers: '1',
   });
 
@@ -22,7 +22,7 @@ export default function SearchForm() {
     const query = {
       origin: formData.origin || undefined,
       destination: formData.destination || undefined,
-      departure_date: formData.departure_date || undefined,
+      date: formData.date || undefined,
       passengers: parseInt(formData.passengers) || 1,
     };
     
@@ -62,14 +62,14 @@ export default function SearchForm() {
         </div>
 
         <div>
-          <label htmlFor="departure_date" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
             Departure Date
           </label>
           <input
-            id="departure_date"
+            id="date"
             type="date"
-            value={formData.departure_date}
-            onChange={(e) => setFormData({ ...formData, departure_date: e.target.value })}
+            value={formData.date}
+            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             min={new Date().toISOString().split('T')[0]}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
           />

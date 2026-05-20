@@ -20,7 +20,7 @@ export default function PassengerDetailsPage({
   const flight = selectedFlight.flight;
   const seat = selectedSeat;
   const basePrice = flight.base_price;
-  const totalPrice = basePrice * seat.price_multiplier;
+  const totalPrice = basePrice + seat.extra_fee;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -65,7 +65,7 @@ export default function PassengerDetailsPage({
                   <Plane className="w-5 h-5 text-gray-500" />
                   <div>
                     <p className="text-sm text-gray-500">Flight</p>
-                    <p className="font-medium text-gray-900">{flight.route_code}</p>
+                    <p className="font-medium text-gray-900">{flight.flight_no}</p>
                   </div>
                 </div>
 
@@ -76,7 +76,7 @@ export default function PassengerDetailsPage({
 
                 <div>
                   <p className="text-sm text-gray-500">Seat</p>
-                  <p className="font-medium text-gray-900">{seat.seat_number} ({seat.cabin_class} Class)</p>
+                  <p className="font-medium text-gray-900">{seat.seat_number} ({seat.class} Class)</p>
                 </div>
 
                 <div className="border-t border-gray-200 pt-4">
@@ -84,10 +84,10 @@ export default function PassengerDetailsPage({
                     <span className="text-gray-600">Base Price</span>
                     <span className="font-medium">${basePrice.toFixed(2)}</span>
                   </div>
-                  {seat.price_multiplier > 1 && (
+                  {seat.extra_fee > 0 && (
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-500">Seat Premium (x{seat.price_multiplier})</span>
-                      <span className="text-gray-700">+${((basePrice * seat.price_multiplier) - basePrice).toFixed(2)}</span>
+                      <span className="text-gray-500">Seat Premium</span>
+                      <span className="text-gray-700">+${seat.extra_fee.toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">

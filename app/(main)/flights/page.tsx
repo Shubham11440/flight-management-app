@@ -27,7 +27,7 @@ export default async function FlightsPage() {
               {searchQuery.origin && `From ${searchQuery.origin}`}
               {searchQuery.origin && searchQuery.destination && ' to '}
               {searchQuery.destination && searchQuery.destination}
-              {searchQuery.departure_date && ` on ${new Date(searchQuery.departure_date).toLocaleDateString()}`}
+              {searchQuery.date && ` on ${new Date(searchQuery.date).toLocaleDateString()}`}
               {searchQuery.passengers && ` · ${searchQuery.passengers} passenger${searchQuery.passengers > 1 ? 's' : ''}`}
             </p>
           )}

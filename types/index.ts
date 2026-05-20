@@ -61,15 +61,15 @@ export interface Reschedule {
 }
 
 export interface SearchQuery {
-  origin: string;
-  destination: string;
-  date: string;
+  origin?: string;
+  destination?: string;
+  date?: string;
   passengers: number;
 }
 
 export interface SelectedFlight {
   flight: Flight;
-  seat: Seat;
+  seat?: Seat;
   cabinClass: 'first' | 'business' | 'economy';
 }
 

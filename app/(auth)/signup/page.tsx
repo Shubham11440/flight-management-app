@@ -3,8 +3,6 @@
 import { signup } from '@/lib/actions/auth';
 import { Plane, ArrowRight, Shield, Clock, Globe, Check, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import { useTheme } from '@/components/theme-provider';
-import { ThemeToggle } from '@/components/theme-toggle';
 import Image from 'next/image';
 
 export default function SignupPage({
@@ -12,7 +10,6 @@ export default function SignupPage({
 }: {
   searchParams: { error?: string };
 }) {
-  const { theme } = useTheme();
 
   return (
     <div className="min-h-screen flex">
@@ -95,27 +92,22 @@ export default function SignupPage({
       </div>
 
       {/* Right Side - Signup Form */}
-      <div className={`flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'} relative`}>
-        {/* Theme Toggle */}
-        <div className="absolute top-6 right-6">
-          <ThemeToggle />
-        </div>
-
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gray-50 relative">
         <div className="max-w-md w-full">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-            <div className={`p-3 rounded-2xl ${theme === 'dark' ? 'bg-purple-600' : 'bg-purple-100'}`}>
-              <Plane className={`w-8 h-8 ${theme === 'dark' ? 'text-white' : 'text-purple-600'}`} />
+            <div className="p-3 rounded-2xl bg-purple-100">
+              <Plane className="w-8 h-8 text-purple-600" />
             </div>
-            <span className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>SkyBook</span>
+            <span className="text-3xl font-bold text-gray-900">SkyBook</span>
           </div>
 
-          <div className={`rounded-3xl shadow-2xl p-8 sm:p-10 transition-colors duration-300 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className="rounded-3xl shadow-2xl p-8 sm:p-10 bg-white">
             <div className="mb-8">
-              <h2 className={`text-4xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className="text-4xl font-bold mb-2 text-gray-900">
                 Create Account
               </h2>
-              <p className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
+              <p className="text-gray-600">
                 Join thousands of travelers worldwide
               </p>
             </div>
@@ -128,7 +120,7 @@ export default function SignupPage({
 
             <form action={signup} className="space-y-5">
               <div>
-                <label htmlFor="email" className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                <label htmlFor="email" className="block text-sm font-semibold mb-2 text-gray-700">
                   Email Address
                 </label>
                 <input
@@ -136,17 +128,13 @@ export default function SignupPage({
                   name="email"
                   type="email"
                   required
-                  className={`w-full px-4 py-4 border rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 ${
-                    theme === 'dark' 
-                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:bg-gray-600' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white'
-                  }`}
+                  className="w-full px-4 py-4 border rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white"
                   placeholder="Enter your email"
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className={`block text-sm font-semibold mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                <label htmlFor="password" className="block text-sm font-semibold mb-2 text-gray-700">
                   Password
                 </label>
                 <input
@@ -155,20 +143,16 @@ export default function SignupPage({
                   type="password"
                   required
                   minLength={6}
-                  className={`w-full px-4 py-4 border rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 ${
-                    theme === 'dark' 
-                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:bg-gray-600' 
-                      : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white'
-                  }`}
+                  className="w-full px-4 py-4 border rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white"
                   placeholder="Create a password"
                 />
-                <p className={`text-xs mt-2 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-500'}`}>Minimum 6 characters</p>
+                <p className="text-xs mt-2 text-gray-500">Minimum 6 characters</p>
               </div>
 
               <div className="flex items-start">
                 <label className="flex items-start">
                   <input type="checkbox" required className="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-500 mt-1" />
-                  <span className={`ml-2 text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <span className="ml-2 text-sm text-gray-600">
                     I agree to the{' '}
                     <a href="#" className="text-purple-600 hover:underline font-medium">Terms of Service</a>
                     {' '}and{' '}
@@ -188,11 +172,11 @@ export default function SignupPage({
 
             <div className="mt-8">
               <div className="relative">
-                <div className={`absolute inset-0 flex items-center`}>
-                  <div className={`w-full border-t ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}></div>
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className={`px-4 ${theme === 'dark' ? 'bg-gray-800 text-gray-400' : 'bg-white text-gray-500'}`}>
+                  <span className="px-4 bg-white text-gray-500">
                     Already have an account?
                   </span>
                 </div>
@@ -200,11 +184,7 @@ export default function SignupPage({
 
               <Link
                 href="/login"
-                className={`mt-6 w-full block text-center py-4 px-4 border-2 rounded-2xl transition-all duration-300 font-semibold flex items-center justify-center gap-2 transform hover:scale-[1.02] ${
-                  theme === 'dark'
-                    ? 'border-purple-600 text-purple-400 hover:bg-purple-600/10'
-                    : 'border-purple-600 text-purple-600 hover:bg-purple-50'
-                }`}
+                className="mt-6 w-full block text-center py-4 px-4 border-2 rounded-2xl transition-all duration-300 font-semibold flex items-center justify-center gap-2 transform hover:scale-[1.02] border-purple-600 text-purple-600 hover:bg-purple-50"
               >
                 Sign In
                 <ArrowRight className="w-5 h-5" />
@@ -212,7 +192,7 @@ export default function SignupPage({
             </div>
           </div>
 
-          <p className={`text-center text-sm mt-6 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>
+          <p className="text-center text-sm mt-6 text-gray-400">
             Your account is secure with end-to-end encryption
           </p>
         </div>
