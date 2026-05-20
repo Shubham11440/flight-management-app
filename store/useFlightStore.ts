@@ -13,6 +13,9 @@ interface FlightState {
   // Selected seat
   selectedSeat: Seat | null;
   
+  // Optimistic seat selection (before server confirms)
+  optimisticSeatId: string | null;
+  
   // Booking flow state
   currentBookingStep: 'search' | 'seats' | 'passengers' | 'confirmation';
   passengerFormData: PassengerFormData | null;
@@ -22,6 +25,7 @@ interface FlightState {
   setSearchResults: (results: any[]) => void;
   setSelectedFlight: (flight: SelectedFlight) => void;
   setSelectedSeat: (seat: Seat) => void;
+  setOptimisticSeatId: (seatId: string | null) => void;
   setBookingStep: (step: 'search' | 'seats' | 'passengers' | 'confirmation') => void;
   setPassengerFormData: (data: PassengerFormData) => void;
   resetSearch: () => void;
@@ -37,6 +41,7 @@ export const useFlightStore = create<FlightState>()(
       searchResults: null,
       selectedFlight: null,
       selectedSeat: null,
+      optimisticSeatId: null,
       currentBookingStep: 'search',
       passengerFormData: null,
       
@@ -45,6 +50,7 @@ export const useFlightStore = create<FlightState>()(
       setSearchResults: (results) => set({ searchResults: results }),
       setSelectedFlight: (flight) => set({ selectedFlight: flight }),
       setSelectedSeat: (seat) => set({ selectedSeat: seat }),
+      setOptimisticSeatId: (seatId) => set({ optimisticSeatId: seatId }),
       setBookingStep: (step) => set({ currentBookingStep: step }),
       setPassengerFormData: (data) => set({ passengerFormData: data }),
       
@@ -53,6 +59,7 @@ export const useFlightStore = create<FlightState>()(
       resetSelection: () => set({ 
         selectedFlight: null, 
         selectedSeat: null,
+        optimisticSeatId: null,
         currentBookingStep: 'search',
         passengerFormData: null,
       }),
@@ -62,6 +69,7 @@ export const useFlightStore = create<FlightState>()(
         searchResults: null,
         selectedFlight: null,
         selectedSeat: null,
+        optimisticSeatId: null,
         currentBookingStep: 'search',
         passengerFormData: null,
       }),

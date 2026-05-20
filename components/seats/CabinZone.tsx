@@ -45,11 +45,11 @@ export default function CabinZone({
         </span>
       </div>
 
-      <div className="bg-gray-50 rounded-2xl border border-gray-100 p-4 overflow-x-auto">
+      <div className="bg-gray-50 rounded-2xl border border-gray-100 p-4 overflow-x-auto overscroll-x-contain -mx-4 px-4 sm:mx-0 sm:px-4 touch-pan-x">
         <div className="min-w-max">
           {sortedRows.map((row) => (
             <div key={row} className="flex items-center gap-2 mb-2 last:mb-0">
-              <span className="w-6 text-sm font-medium text-gray-600">{row}</span>
+              <span className="w-6 text-sm font-medium text-gray-600 select-none">{row}</span>
               <div className="flex gap-2">
                 {seatsByRow[row]
                   .sort((a, b) => a.seat_number.localeCompare(b.seat_number))
@@ -65,7 +65,7 @@ export default function CabinZone({
                     />
                   ))}
               </div>
-              <span className="w-6 text-sm font-medium text-gray-600">{row}</span>
+              <span className="w-6 text-sm font-medium text-gray-600 select-none">{row}</span>
             </div>
           ))}
         </div>
