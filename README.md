@@ -150,24 +150,6 @@ The app uses Zustand with persistence middleware (matching Technical Assignment 
   - Persists only the session token (not full user data) as per assignment requirements
   - Includes logout and reset actions
 
-## Implementation Commits
-
-The project follows a 13-commit implementation plan for clear Git history:
-
-1. `chore: initialize Next.js app with Tailwind and core dependencies`
-2. `feat(db): add schema migrations for flights, seats, bookings, passengers, and reschedules`
-3. `feat(db): add RLS policies and atomic RPC functions for booking, cancel, and reschedule`
-4. `feat(db): add cancellation trigger and seed data for flights, seats, and test user`
-5. `feat(auth): configure Supabase clients, middleware, and login/signup flow`
-6. `feat(store): implement Zustand stores with persist, partialize, and reset actions`
-7. `feat(search): build flight search form and server-rendered results listing`
-8. `feat(seats): build interactive seat map with class zones and realtime updates`
-9. `feat(booking): add passenger form, atomic booking action, and confirmation page`
-10. `feat(bookings): implement my bookings page and atomic cancellation flow`
-11. `feat(bookings): implement reschedule flow with fee calculation and atomic seat transfer`
-12. `style: complete responsive polish, loading states, and UX edge-case handling`
-13. `docs: add README, env example, deployment notes`
-
 ## Deployment
 
 ### Vercel
