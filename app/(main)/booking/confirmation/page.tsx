@@ -2,14 +2,16 @@ import { createClient } from '@/lib/supabase/server';
 import ConfirmationCard from '@/components/booking/ConfirmationCard';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Home, ArrowLeft } from 'lucide-react';
+import { Home, ArrowLeft, CheckCircle } from 'lucide-react';
 
 export default async function ConfirmationPage({
   searchParams,
 }: {
-  searchParams: { pnr?: string };
+  searchParams: Promise<{ id?: string }>;
 }) {
-  if (!searchParams.pnr) {
+  const params = await searchParams;
+  
+  if (!params.id) {
     redirect('/search');
   }
 
@@ -22,8 +24,8 @@ export default async function ConfirmationPage({
 
   const { data: booking } = await supabase
     .from('bookings')
-    .select('*, flight:flights(*), seat:seats(*)')
-    .eq('pnr_code', searchParams.pnr)
+    .select('*, flight:flights(*), seat:seats(*), passenger:passengers(*)')
+    .eq('id', params.id)
     .eq('user_id', user.id)
     .single();
 
@@ -51,11 +53,31 @@ export default async function ConfirmationPage({
           </Link>
         </div>
 
-        <ConfirmationCard
-          booking={booking}
-          flight={booking.flight}
-          seat={booking.seat}
-        />
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Booking Confirmed!</h1>
+            <p className="text-gray-600">Your flight has been successfully booked</p>
+          </div>
+
+          <ConfirmationCard
+            booking={booking}
+            flight={booking.flight}
+            seat={booking.seat}
+            passenger={booking.passenger}
+          />
+        </div>
+
+        <div className="text-center">
+          <Link
+            href={`/my-bookings/${booking.id}`}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
+          >
+            View Booking Details
+          </Link>
+        </div>
       </div>
     </div>
   );

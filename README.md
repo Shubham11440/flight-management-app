@@ -180,7 +180,7 @@ Create a test user in Supabase Auth to test the booking flow:
 
 **Test User Credentials:**
 - Email: test@flightapp.com
-- Password: Test1234!
+- Password: test@123
 
 ### Seed Data
 
@@ -221,4 +221,4 @@ This project is for demonstration purposes.
 
 -- Create the test user manually in Supabase Auth dashboard:
 -- Email: test@flightapp.com
--- Password: Test1234!
+-- Password: test@123

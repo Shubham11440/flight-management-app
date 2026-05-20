@@ -1,15 +1,16 @@
 import { format } from 'date-fns';
-import type { Booking, Flight, Seat } from '@/types';
-import { CheckCircle, Plane, Calendar, Clock, MapPin } from 'lucide-react';
+import type { Booking, Flight, Seat, Passenger } from '@/types';
+import { CheckCircle, Plane, Calendar, Clock, MapPin, User } from 'lucide-react';
 import { formatPrice } from '@/lib/utils/price';
 
 interface ConfirmationCardProps {
   booking: Booking;
   flight: Flight;
   seat: Seat;
+  passenger?: Passenger;
 }
 
-export default function ConfirmationCard({ booking, flight, seat }: ConfirmationCardProps) {
+export default function ConfirmationCard({ booking, flight, seat, passenger }: ConfirmationCardProps) {
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
       <div className="flex items-center justify-center mb-6">
@@ -82,6 +83,16 @@ export default function ConfirmationCard({ booking, flight, seat }: Confirmation
             </p>
           </div>
         </div>
+
+        {passenger && (
+          <div className="flex items-center gap-3 rounded-xl bg-gray-50 p-4">
+            <User className="w-5 h-5 text-purple-600" />
+            <div>
+              <p className="text-sm text-gray-500">Passenger</p>
+              <p className="font-medium text-gray-900">{passenger.full_name}</p>
+            </div>
+          </div>
+        )}
 
         <div className="flex items-center gap-3 rounded-xl bg-green-50 p-4">
           <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">

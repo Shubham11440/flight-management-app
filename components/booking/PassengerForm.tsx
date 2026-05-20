@@ -23,7 +23,7 @@ export default function PassengerForm({ flightId, seatId }: PassengerFormProps) 
     if (result?.error) {
       router.push(`/booking/passengers?error=${encodeURIComponent(result.error)}`);
     } else if (result?.bookingId) {
-      router.push(`/my-bookings/${result.bookingId}`);
+      router.push(`/booking/confirmation?id=${result.bookingId}`);
     }
   };
 
