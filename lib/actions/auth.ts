@@ -30,10 +30,18 @@ export async function signup(formData: FormData) {
     password: formData.get('password') as string,
   };
 
-  const { error } = await supabase.auth.signUp(data);
+  const { data: signUpData, error: signUpError } = await supabase.auth.signUp(data);
 
-  if (error) {
-    redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+  if (signUpError) {
+    redirect(`/signup?error=${encodeURIComponent(signUpError.message)}`);
+  }
+
+  // If no session returned (email confirmation enabled), try signing in
+  if (!signUpData.session) {
+    const { error: signInError } = await supabase.auth.signInWithPassword(data);
+    if (signInError) {
+      redirect(`/login?error=${encodeURIComponent('Account created. Please sign in.')}`);
+    }
   }
 
   revalidatePath('/', 'layout');
