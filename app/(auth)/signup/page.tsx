@@ -1,7 +1,7 @@
 'use client';
 
 import { signup } from '@/lib/actions/auth';
-import { Plane, ArrowRight, Shield, Clock, Globe, Check, Sparkles } from 'lucide-react';
+import { Plane, ArrowRight, Shield, Clock, Globe, Check } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { use } from 'react';
@@ -14,7 +14,7 @@ export default function SignupPage({
   const params = use(searchParams);
 
   return (
-    <div className="min-h-screen flex">
+    <div className="h-screen flex overflow-hidden">
       {/* Left Side - Hero Section with Images */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         {/* Background Image */}
@@ -31,7 +31,7 @@ export default function SignupPage({
         </div>
         
         {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center px-16 py-12">
+        <div className="relative z-10 flex flex-col justify-center px-12 py-8">
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
@@ -39,53 +39,40 @@ export default function SignupPage({
               </div>
               <span className="text-4xl font-bold text-white tracking-tight">SkyBook</span>
             </div>
-            <h1 className="text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-4xl xl:text-5xl font-bold text-white mb-4 leading-tight">
               Join the<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-200 to-purple-200">Adventure</span>
             </h1>
-            <p className="text-xl text-purple-100 mb-12 leading-relaxed">
+            <p className="text-lg text-purple-100 mb-8 leading-relaxed">
               Create your account and start booking flights today
             </p>
           </div>
 
-          {/* Airplane Image */}
-          <div className="relative mb-12">
-            <div className="w-full h-48 relative">
-              <Image
-                src="/airplane.png"
-                alt="Airplane"
-                fill
-                className="object-contain drop-shadow-2xl"
-                style={{ objectFit: 'contain' }}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex items-center gap-4 group">
-              <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm group-hover:bg-white/30 transition-all duration-300">
-                <Check className="w-7 h-7 text-white" />
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:bg-white/30 transition-all duration-300">
+                <Check className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-xl text-white">Free to Join</h3>
+                <h3 className="font-semibold text-lg text-white">Free to Join</h3>
                 <p className="text-purple-200 text-sm">No hidden fees</p>
               </div>
             </div>
             <div className="flex items-center gap-4 group">
-              <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm group-hover:bg-white/30 transition-all duration-300">
-                <Clock className="w-7 h-7 text-white" />
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:bg-white/30 transition-all duration-300">
+                <Clock className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-xl text-white">Quick Setup</h3>
+                <h3 className="font-semibold text-lg text-white">Quick Setup</h3>
                 <p className="text-purple-200 text-sm">Get started in minutes</p>
               </div>
             </div>
             <div className="flex items-center gap-4 group">
-              <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm group-hover:bg-white/30 transition-all duration-300">
-                <Shield className="w-7 h-7 text-white" />
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:bg-white/30 transition-all duration-300">
+                <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-xl text-white">Secure Platform</h3>
+                <h3 className="font-semibold text-lg text-white">Secure Platform</h3>
                 <p className="text-purple-200 text-sm">Your data is safe</p>
               </div>
             </div>
@@ -94,8 +81,8 @@ export default function SignupPage({
       </div>
 
       {/* Right Side - Signup Form */}
-      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gray-50 relative">
-        <div className="max-w-md w-full">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gray-50 relative overflow-y-auto">
+        <div className="max-w-md w-full py-6">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
             <div className="p-3 rounded-2xl bg-purple-100">
@@ -104,12 +91,12 @@ export default function SignupPage({
             <span className="text-3xl font-bold text-gray-900">SkyBook</span>
           </div>
 
-          <div className="rounded-3xl shadow-2xl p-8 sm:p-10 bg-white">
-            <div className="mb-8">
-              <h2 className="text-4xl font-bold mb-2 text-gray-900">
+          <div className="rounded-2xl shadow-2xl p-6 sm:p-8 bg-white">
+            <div className="mb-6">
+              <h2 className="text-3xl font-bold mb-2 text-gray-900">
                 Create Account
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-600 text-sm">
                 Join thousands of travelers worldwide
               </p>
             </div>
@@ -130,7 +117,7 @@ export default function SignupPage({
                   name="email"
                   type="email"
                   required
-                  className="w-full px-4 py-4 border rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white"
+                  className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white"
                   placeholder="Enter your email"
                 />
               </div>
@@ -145,10 +132,10 @@ export default function SignupPage({
                   type="password"
                   required
                   minLength={6}
-                  className="w-full px-4 py-4 border rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white"
+                  className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white"
                   placeholder="Create a password"
                 />
-                <p className="text-xs mt-2 text-gray-500">Minimum 6 characters</p>
+                <p className="text-xs mt-1 text-gray-500">Minimum 6 characters</p>
               </div>
 
               <div className="flex items-start">
@@ -165,7 +152,7 @@ export default function SignupPage({
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-4 rounded-2xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl flex items-center justify-center gap-2 transform hover:scale-[1.02]"
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
               >
                 Create Account
                 <ArrowRight className="w-5 h-5" />
@@ -186,7 +173,7 @@ export default function SignupPage({
 
               <Link
                 href="/login"
-                className="mt-6 w-full block text-center py-4 px-4 border-2 rounded-2xl transition-all duration-300 font-semibold flex items-center justify-center gap-2 transform hover:scale-[1.02] border-purple-600 text-purple-600 hover:bg-purple-50"
+                className="mt-4 w-full block text-center py-3 px-4 border-2 rounded-xl transition-all duration-300 font-semibold flex items-center justify-center gap-2 border-purple-600 text-purple-600 hover:bg-purple-50"
               >
                 Sign In
                 <ArrowRight className="w-5 h-5" />
