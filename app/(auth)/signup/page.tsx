@@ -1,10 +1,10 @@
 'use client';
 
 import { signup } from '@/lib/actions/auth';
-import { Plane, ArrowRight, Shield, Clock, Globe, Check } from 'lucide-react';
+import { Plane, ArrowRight, Shield, Clock, Globe, Check, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { use } from 'react';
+import { use, useState } from 'react';
 
 export default function SignupPage({
   searchParams,
@@ -12,6 +12,7 @@ export default function SignupPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const params = use(searchParams);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="h-screen flex overflow-hidden">
@@ -126,15 +127,25 @@ export default function SignupPage({
                 <label htmlFor="password" className="block text-sm font-semibold mb-2 text-gray-700">
                   Password
                 </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  minLength={6}
-                  className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white"
-                  placeholder="Create a password"
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    minLength={6}
+                    className="w-full px-4 py-3 pr-12 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white"
+                    placeholder="Create a password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
                 <p className="text-xs mt-1 text-gray-500">Minimum 6 characters</p>
               </div>
 

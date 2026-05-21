@@ -16,7 +16,7 @@ export async function getUserBookings() {
       *,
       flight:flights(*),
       seat:seats(*),
-      passenger:passengers(*)
+      passengers(*)
     `)
     .eq('user_id', user.id)
     .order('booked_at', { ascending: false });
@@ -44,7 +44,7 @@ export async function getBookingById(bookingId: string) {
       *,
       flight:flights(*),
       seat:seats(*),
-      passenger:passengers(*)
+      passengers(*)
     `)
     .eq('id', bookingId)
     .eq('user_id', user.id)

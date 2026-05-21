@@ -36,7 +36,7 @@ export interface Booking {
   updated_at: string;
   flight?: Flight;
   seat?: Seat;
-  passenger?: Passenger;
+  passengers?: Passenger[];
 }
 
 export interface Passenger {

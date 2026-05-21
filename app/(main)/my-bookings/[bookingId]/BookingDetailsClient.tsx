@@ -161,19 +161,19 @@ export default function BookingDetailsClient({ booking }: BookingDetailsClientPr
       <h2>Passenger Information</h2>
       <div class="row">
         <span class="label">Name:</span>
-        <span class="value">${booking.passenger?.full_name}</span>
+        <span class="value">${booking.passengers?.[0]?.full_name || 'N/A'}</span>
       </div>
       <div class="row">
         <span class="label">Passport Number:</span>
-        <span class="value">${booking.passenger?.passport_no}</span>
+        <span class="value">${booking.passengers?.[0]?.passport_no || 'N/A'}</span>
       </div>
       <div class="row">
         <span class="label">Nationality:</span>
-        <span class="value">${booking.passenger?.nationality}</span>
+        <span class="value">${booking.passengers?.[0]?.nationality || 'N/A'}</span>
       </div>
       <div class="row">
         <span class="label">Date of Birth:</span>
-        <span class="value">${booking.passenger?.dob}</span>
+        <span class="value">${booking.passengers?.[0]?.dob || 'N/A'}</span>
       </div>
     </div>
 
@@ -308,20 +308,20 @@ export default function BookingDetailsClient({ booking }: BookingDetailsClientPr
             <div>
               <p className="text-sm text-gray-500">Name</p>
               <p className="font-medium text-gray-900">
-                {booking.passenger?.full_name}
+                {booking.passengers?.[0]?.full_name || 'N/A'}
               </p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Passport Number</p>
-              <p className="font-medium text-gray-900">{booking.passenger?.passport_no}</p>
+              <p className="font-medium text-gray-900">{booking.passengers?.[0]?.passport_no || 'N/A'}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Nationality</p>
-              <p className="font-medium text-gray-900">{booking.passenger?.nationality}</p>
+              <p className="font-medium text-gray-900">{booking.passengers?.[0]?.nationality || 'N/A'}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Date of Birth</p>
-              <p className="font-medium text-gray-900">{booking.passenger?.dob}</p>
+              <p className="font-medium text-gray-900">{booking.passengers?.[0]?.dob || 'N/A'}</p>
             </div>
           </div>
         </div>

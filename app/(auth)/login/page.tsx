@@ -1,10 +1,10 @@
 'use client';
 
 import { login } from '@/lib/actions/auth';
-import { Plane, ArrowRight, Shield, Clock, Globe } from 'lucide-react';
+import { Plane, ArrowRight, Shield, Clock, Globe, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { use } from 'react';
+import { use, useState } from 'react';
 
 export default function LoginPage({
   searchParams,
@@ -12,6 +12,7 @@ export default function LoginPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const params = use(searchParams);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="h-screen flex overflow-hidden">
@@ -126,14 +127,24 @@ export default function LoginPage({
                 <label htmlFor="password" className="block text-sm font-semibold mb-2 text-gray-700">
                   Password
                 </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  className="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white"
-                  placeholder="Enter your password"
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    className="w-full px-4 py-3 pr-12 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400 focus:bg-white"
+                    placeholder="Enter your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
               </div>
 
               <div className="flex items-center justify-between">

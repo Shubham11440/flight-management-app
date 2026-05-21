@@ -24,7 +24,7 @@ export default async function ConfirmationPage({
 
   const { data: booking } = await supabase
     .from('bookings')
-    .select('*, flight:flights(*), seat:seats(*), passenger:passengers(*)')
+    .select('*, flight:flights(*), seat:seats(*), passengers(*)')
     .eq('id', params.id)
     .eq('user_id', user.id)
     .single();
@@ -32,6 +32,11 @@ export default async function ConfirmationPage({
   if (!booking) {
     redirect('/search');
   }
+
+  // Extract first passenger from array
+  const passenger = Array.isArray(booking.passengers) && booking.passengers.length > 0
+    ? booking.passengers[0]
+    : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center px-4 py-12">
@@ -66,7 +71,7 @@ export default async function ConfirmationPage({
             booking={booking}
             flight={booking.flight}
             seat={booking.seat}
-            passenger={booking.passenger}
+            passenger={passenger}
           />
         </div>
 
